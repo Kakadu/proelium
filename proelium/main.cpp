@@ -2,18 +2,41 @@
 #include "mainwindow.h"
 #include "framecollection.h"
 #include "unit.h"
+#include "GameMap.h"
 #include <QtCore>
+#include <QBitmap>
+#include <QPainter>
+#include "mapdrawer.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
+
+    /*QGraphicsPixmapItem* item = w.createBattleItem();
+    QPixmap* p = new QPixmap("irrigation_plains2.bmp");
+    //const QBitmap mask = p-> createHeuristicMask();
+    const QBitmap mask = p-> createMaskFromColor(QColor(255,0,255));
+
+    p->setMask(mask);
+
+    QPixmap p2 = p->copy(0,0,128,64);
+    //const QBitmap mask = p-> createMaskFromColor(QColor(0,255,0));
+    item->setPixmap(p2);
+    */
+    /*
     FrameCollection tankAttackSprites(QObject::tr("./tank_att/TankAttackA_E_"),20);
-    qDebug() << "frames created" << endl;
     Unit tankUnit(&tankAttackSprites, w.createBattleItem() );
     tankUnit.setAttackFrame(0);
+    //tankUnit.animate(0);
+    */
+
+    GameMap m(4,5);
+    QGraphicsScene* sc = w.getScene();
+    MapDrawer drawer(sc,&m);
+    drawer.repaint();
+    sc->invalidate(0,0,50,50);
 
     w.show();
-    tankUnit.animate(0);
     return a.exec();
 }

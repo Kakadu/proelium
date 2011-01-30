@@ -1,6 +1,7 @@
 #ifndef FRAMECOLLECTION_H
 #define FRAMECOLLECTION_H
 #include <QtGui/qwidget.h>
+
 class FrameCollection {
 private:
     QColor _backColor;

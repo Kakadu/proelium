@@ -22,7 +22,7 @@ QGraphicsPixmapItem* MainWindow::createBattleItem() {
     scene->addItem(item);
     return item;
 }
-inline QGraphicsScene* MainWindow::getScene() {
+QGraphicsScene* MainWindow::getScene() {
     return scene;
 }
 

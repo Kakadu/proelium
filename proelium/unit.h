@@ -12,6 +12,7 @@ class Unit : public QObject  {
 private:
     FrameCollection* _attackFrames;
     FrameCollection* _deathFrames;
+    FrameCollection* _moveFrames[8];
     QGraphicsPixmapItem* _view;
     QTimer* _timer;
     int _curframe;

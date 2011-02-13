@@ -16,7 +16,7 @@ public:
     MapSquare* getSquare1(int i,int j);
     int width() { return _width; }
     int height() { return _height; }
-
+    void init();
 signals:
 
 public slots:

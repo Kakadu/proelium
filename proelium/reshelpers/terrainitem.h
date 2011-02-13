@@ -1,11 +1,9 @@
 #ifndef TERRAINITEM_H
 #define TERRAINITEM_H
 #include <QPixmap>
-#include <QObject>
+//#include <QObject>
 
-class TerrainItem : public QObject
-{
-Q_OBJECT
+class TerrainItem {
     QVector<QPixmap> *_images;
     int _hCount, _vCount;
     int _imageWidth, _imageHeight;

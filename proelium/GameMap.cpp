@@ -37,22 +37,22 @@ GameMap::GameMap(int w, int h,QObject *parent) : QObject(parent) {
 
     for (int i=0;i<s;i++) {
 	for (int j=0; j<s; j++) {
-	    if (field_mask[i][j]) {
-		_field[i][j] = new MapSquare();
-		_field[i][j]->set(8);
-	    } else
-		_field[i][j] = NULL;
+	    _field[i][j] = (field_mask[i][j]) ? (new MapSquare()) : NULL;
 	}
     }
-    for (int i=0; i<s; ++i) {
-	for (int j=0; j<s; ++j) {
-	    if (field_mask[i][j])
-		std::cout << 8 << " ";
-	    else
-		std::cout << " . ";
-	}
-	std::cout<<"\n";
+}
+void GameMap::init() {
+    int s  = _width+_height+2;
+    MapSquare* sq;
+    for (int i=0; i<s; ++i)
+	for (int j=0; j<s; ++j)
+	    if ((sq=_field[i][j]) != NULL) {
+		sq->setTerrainSprite(40);
+	    }
+    for(int i=0;i<_height+1; ++i) {
+	_field[_width+1+i][i]->setTerrainSprite(23);
     }
+
 }
 
 MapSquare* GameMap::getSquare1(int i,int j) {

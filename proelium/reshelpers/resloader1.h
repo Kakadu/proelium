@@ -9,7 +9,8 @@ class ResLoader1 : public QObject
 Q_OBJECT
 public:
     //explicit ResLoader1();
-    static QVector<QPixmap>* load1(QString,int,int, QColor);
+    static void load1(QVector<QPixmap>&,QString,int,int, QColor);
+    static QVector<QPixmap>* load2(QString,int,int, QColor);
 signals:
 
 public slots:

@@ -3,17 +3,25 @@
 #include <QObject>
 #include <QGraphicsScene>
 #include "GameMap.h"
-#include "reshelpers/terrainitem.h"
+#include "reshelpers/resloader1.h"
+#include <QPixmap>
+#include <QVector>
+#include "action/action.h"
 
-class MapDrawer : public QObject {
-Q_OBJECT
+static QVector<QPixmap> TerrainSprites;
+
+class MapDrawer : public QObject, public UnitVisitor {
+    Q_OBJECT
 private:
     QGraphicsScene* _scene;
     GameMap* _map;
-    TerrainItem* _sprites;
+
+    int _imageWidth, _imageHeight;
 public:
     MapDrawer(QGraphicsScene* sc, GameMap* m);
     void repaint();
+    virtual void visit(FireUnitAction&) {}
+    virtual void visit(MoveUnitAction&) {}
 signals:
 
 public slots:

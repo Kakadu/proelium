@@ -14,14 +14,16 @@ SOURCES += main.cpp \
     GameMap.cpp \
     mapsquare.cpp \
     reshelpers/resloader1.cpp \
-    reshelpers/terrainitem.cpp \
-    mapdrawer.cpp
+    mapdrawer.cpp \
+    action/action.cpp \
+    reshelpers/rescontainer.cpp
 HEADERS += mainwindow.h \
     framecollection.h \
     unit.h \
     GameMap.h \
     mapsquare.h \
     reshelpers/resloader1.h \
-    reshelpers/terrainitem.h \
-    mapdrawer.h
+    mapdrawer.h \
+    action/action.h \
+    reshelpers/rescontainer.h
 FORMS += mainwindow.ui

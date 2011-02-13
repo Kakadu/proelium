@@ -7,13 +7,14 @@ class MapSquare : public QObject
 {
 Q_OBJECT
 private:
-    int _temp;
+    int _terrainSpriteIndex;
+    int _resourceSpriteIndex;   // one square can have only 1 resource;
 public:
     explicit MapSquare();
-    void set(int x) {
-	_temp=x;
-    }
-    int get() { return _temp; }
+    void setTerrainSprite(int x) { _terrainSpriteIndex=x; }
+    int terrainSprite() { return _terrainSpriteIndex; }
+    void setResourceIndex(int x) { _resourceSpriteIndex=x; }
+    int reousrceIndex() { return _resourceSpriteIndex; }
 
 signals:
 

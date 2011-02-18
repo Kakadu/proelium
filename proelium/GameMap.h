@@ -18,7 +18,7 @@ public:
     int height() { return _height; }
     void init();
 signals:
-
+    void unitRemoved(int);
 public slots:
 
 };

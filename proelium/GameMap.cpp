@@ -2,6 +2,8 @@
 #include <QVector>
 #include <iostream>
 #include "mapsquare.h"
+#include "cstdlib"
+
 using namespace std;
 
 GameMap::GameMap(int w, int h,QObject *parent) : QObject(parent) {
@@ -49,10 +51,15 @@ void GameMap::init() {
 	    if ((sq=_field[i][j]) != NULL) {
 		sq->setTerrainSprite(40);
 	    }
-    for(int i=0;i<_height+1; ++i) {
+/*    for(int i=0;i<_height+1; ++i) {
 	_field[_width+1+i][i]->setTerrainSprite(23);
-    }
+    } */
 
+/*    for (int i=0; i< _height+1; ++i) {
+	Unit* u = new Unit(tr("tank"),1,this);
+	_field[_width+1+i][i]->addUnit(u);
+    }
+*/
 }
 
 MapSquare* GameMap::getSquare1(int i,int j) {

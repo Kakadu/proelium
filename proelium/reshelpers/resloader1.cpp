@@ -1,11 +1,12 @@
 #include "resloader1.h"
 #include <QPixmap>
 #include <QBitmap>
+#include <QDebug>
 
-void ResLoader1::load1(QVector<QPixmap> &ans, QString path, int hcount, int vcount, QColor c) {
+void ResLoader1::load1(QVector<QPixmap> &ans, int& height, int& width, QString path, int hcount, int vcount, QColor c) {
     QPixmap src(path);
-    int width = src.width() / hcount,
-	height = src.height() / vcount;
+    width = src.width() / hcount;
+    height = src.height() / vcount;
 
 
     QBitmap mask = src.createMaskFromColor(c);

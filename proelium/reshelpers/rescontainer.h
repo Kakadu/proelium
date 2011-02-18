@@ -9,16 +9,22 @@
 #include <reshelpers/resloader1.h>
 
 typedef QVector<QPixmap> Images;
-class SpritesPack {};
-class UnitPack : SpritesPack {
-public:
-    Images attack,death,move;
+class SpritesPack {
+private:
+    virtual void f() =0;
+
 };
-class TerrainPack : SpritesPack {
+class UnitPack : public SpritesPack {
+    void f() {}
+public:
+    Images attack,death,move,normal;
+};
+class TerrainPack : public SpritesPack {
+    void f(){}
 public:
     Images content;
 };
-
+/*
 static QMap<QString,SpritesPack> ResourceMap;
 class ResContainer
 {
@@ -31,5 +37,5 @@ public:
 	//ResourceMap.insert(QString("terrain1"),mainTerrain);
     }
 };
-
+*/
 #endif // RESCONTAINER_H

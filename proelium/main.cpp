@@ -33,10 +33,15 @@ int main(int argc, char *argv[])
     tankUnit.setAttackFrame(0);
     tankUnit.animate(0);
 */
-    GameMap m(9,8);
+    //GameMap m(9,8);
+
+    GameMap m(7,6);
     m.init();
     QGraphicsScene* sc = w.getScene();
     MapDrawer drawer(sc,&m);
+
+    drawer.paintField();
+    drawer.placeArmies();
     drawer.repaint();
     //sc->invalidate(0,0,50,50);
 

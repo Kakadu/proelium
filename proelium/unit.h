@@ -6,23 +6,38 @@
 #include <QtCore>
 #include <QTimer>
 
+typedef int IDT;
+
 class Unit : public QObject  {
     Q_OBJECT
-    Q_PROPERTY(int attackFrame WRITE setAttackFrame READ attackFrame);
+    //Q_PROPERTY(int attackFrame WRITE setAttackFrame READ attackFrame);
 private:
     FrameCollection* _attackFrames;
     FrameCollection* _deathFrames;
     FrameCollection* _moveFrames[8];
     QGraphicsPixmapItem* _view;
     QTimer* _timer;
-    int _curframe;
+    int _curframe,;
 
 public:
-    Unit(FrameCollection* att_col, QGraphicsPixmapItem* view)
-	: _attackFrames(att_col), _view(view) {	
-	_timer = new QTimer(NULL);
+    IDT id;
+    QString name;
+
+    Unit& operator=(const Unit& u) {
+	Unit* a = new Unit(u.name, u.id);
+	return *a;
     }
 
+    explicit Unit(QString _name, int _id, QObject* parent = NULL) : QObject(parent) {
+	name = _name;
+	id = _id;
+    }
+    explicit Unit(Unit& u) {
+	name = u.name;
+	id = u.id;
+    }
+
+/*
     void setAttackFrame(int n)  {
 	_curframe = n;
 	QPixmap* map = _attackFrames->getImage(n);
@@ -39,12 +54,7 @@ public:
 	an1->setDuration(2000);
 	an1->start();
     }
-
-    /*void nextFrame() {
-	_curframe++;
-	if (_curframe == _attackFrames->count() )
-	    _curframe = 0;
-    }*/
+*/
 };
 
 #endif // UNIT_H

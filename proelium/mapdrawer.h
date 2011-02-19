@@ -25,13 +25,41 @@ public:
     void repaint();
     void paintField();
     void placeArmies();
-    virtual void visit(FireUnitAction&) {}
-    virtual void visit(MoveUnitAction&) {}
+    virtual void visit(FireUnitAction& act) {
+	QString res = act.result ? "killed" : "fired";
+	qDebug() << act.unitID << " " << res << " " << act.targetID;
+	qDebug() << "visited FireUnitAction";
+	QGraphicsPixmapItem* item;
+	if (unitGraphics.contains(act.targetID)) {
+	    item = unitGraphics.take(act.targetID);
+	    _scene->removeItem(item);
+	} else {
+
+	}
+	emit continueModel();
+    }
+    virtual void visit(MoveUnitAction&) {
+	qDebug() << "visited MoveUnitAction";
+	emit continueModel();
+    }
+    virtual void visit(EndWarAction&) {
+	qDebug() << "War never ends.";
+    }
+    virtual void visit(NoAction&) {
+	qDebug() << "visited NoAction";
+	emit continueModel();
+    }
+
 signals:
+    void continueModel();
 
 public slots:
     void removeUnit(const int x) {
 	unitGraphics.remove(x);
+    }
+    void applyAction(AbstractUnitAction* u) {
+	u->accept(*this);
+	delete u;
     }
 };
 

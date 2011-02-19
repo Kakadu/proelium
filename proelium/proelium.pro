@@ -16,7 +16,8 @@ SOURCES += main.cpp \
     reshelpers/resloader1.cpp \
     mapdrawer.cpp \
     action/action.cpp \
-    reshelpers/rescontainer.cpp
+    reshelpers/rescontainer.cpp \
+    fightingmodel.cpp
 HEADERS += mainwindow.h \
     framecollection.h \
     unit.h \
@@ -25,5 +26,6 @@ HEADERS += mainwindow.h \
     reshelpers/resloader1.h \
     mapdrawer.h \
     action/action.h \
-    reshelpers/rescontainer.h
+    reshelpers/rescontainer.h \
+    fightingmodel.h
 FORMS += mainwindow.ui

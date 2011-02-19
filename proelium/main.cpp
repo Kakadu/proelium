@@ -9,6 +9,7 @@
 #include "mapdrawer.h"
 #include "action/action.h"
 #include "mainwindow.h"
+#include "fightingmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -43,9 +44,17 @@ int main(int argc, char *argv[])
     drawer.paintField();
     drawer.placeArmies();
     drawer.repaint();
+
+    SimpleFightingModel model(&m);
+
     //sc->invalidate(0,0,50,50);
+    QObject::connect(&model,SIGNAL(action(AbstractUnitAction*)),
+		     &drawer,SLOT(applyAction(AbstractUnitAction*)) );
 
+    QObject::connect(&drawer, SIGNAL(continueModel()),
+		     &model, SLOT(next()) );
 
+    model.next();
     w.show();
     return a.exec();
 }

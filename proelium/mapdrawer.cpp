@@ -25,14 +25,18 @@ MapDrawer::MapDrawer(QGraphicsScene* sc , GameMap* m) {
 	ResLoader1::load1(tanks->attack,x,x,
 			  "./tank_att/TankAttackA_W.pcx",20,1,QColor(192,192,192) );
 	Sprites.insert(tr("tank"),tanks);
+
+	UnitPack* pturs = new UnitPack;
+	ResLoader1::load1(pturs->attack,x,x,
+			"./tank_att/TankAttackA_E.pcx",20,1,QColor(192,192,192) );
+
+	Sprites.insert(tr("ptur"),pturs);
     }
     _map = m;
     _scene = sc;    
 }
 void MapDrawer::repaint() {
-    int hc = _map->height(), wc = _map->width(),
-	h = _imageHeight, w = _imageWidth,
-	left=5, top=5;
+    int hc = _map->height(), wc = _map->width();
 
     int leftOffset = 5, topOffset=5;
 
@@ -72,7 +76,7 @@ void MapDrawer::repaint() {
 		QGraphicsPixmapItem* item;
 
 		if (unitGraphics.contains(u->id))
-		    item = unitGraphics.take(u->id);
+		    item = unitGraphics.value(u->id);
 		else {
 		    item = new QGraphicsPixmapItem(NULL,_scene);
 		    unitGraphics.insert(u->id,item);
@@ -98,7 +102,7 @@ void MapDrawer::placeArmies() {
 	_map->getSquare1(w+1+j,j)->addUnit(unit);
 	aaa[w+1+j][j]=1;
 
-	unit = new Unit("tank",j+h+1);
+	unit = new Unit("ptur",1000+j);
 	_map->getSquare1(j,w+1+j)->addUnit(unit);
     }
     /*

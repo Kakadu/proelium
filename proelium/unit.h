@@ -32,10 +32,12 @@ public:
 	name = _name;
 	id = _id;
     }
+    /*
     explicit Unit(Unit& u) {
 	name = u.name;
 	id = u.id;
     }
+    */
 
 /*
     void setAttackFrame(int n)  {

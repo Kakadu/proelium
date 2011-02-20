@@ -10,6 +10,7 @@
 #include "action/action.h"
 #include "mainwindow.h"
 #include "fightingmodel.h"
+#include "reshelpers/rescontainer.h"
 
 int main(int argc, char *argv[])
 {
@@ -40,10 +41,16 @@ int main(int argc, char *argv[])
     m.init();
     QGraphicsScene* sc = w.getScene();
     MapDrawer drawer(sc,&m);
+    qDebug() << "### main.cpp before paintField################################";
+    foreach (QString s, Sprites.keys()) {
+	qDebug() << "=) " << s;
+    }
 
     drawer.paintField();
     drawer.placeArmies();
     drawer.repaint();
+
+
 
     SimpleFightingModel model(&m);
 
@@ -53,6 +60,16 @@ int main(int argc, char *argv[])
 
     QObject::connect(&drawer, SIGNAL(continueModel()),
 		     &model, SLOT(next()) );
+
+    qDebug() << "############main.cpp #######################";
+    foreach (QString s, Sprites.keys()) {
+	qDebug() << "=) " << s;
+    }
+    drawer.paintField();
+    if (Sprites.empty())
+	qDebug() << " map is EMPTY";
+    else
+	qDebug() << " map no empty";
 
     model.next();
     w.show();

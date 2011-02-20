@@ -1,5 +1,6 @@
 #ifndef ACTION_H
 #define ACTION_H
+#include <QObject>
 
 class FireUnitAction;
 class MoveUnitAction;
@@ -31,10 +32,15 @@ public:
 };
 class FireUnitAction : public AbstractUnitAction {    
 public:
-    const int unitID;
-    const int targetID;
+    const int attackerID;
+    const int victimID;
+    QString attackerName;
+    QString victimName;
     const int result;
-    FireUnitAction(int id, int tid, bool r) : unitID(id), targetID(tid), result(r) {}
+    FireUnitAction(int id, QString aName, int tid, QString vName, bool r) :
+	    attackerID(id), victimID(tid),
+	    attackerName(aName), victimName(vName), result(r) {}
+
     virtual void accept(UnitVisitor &v) {
 	v.visit(*this);
     }

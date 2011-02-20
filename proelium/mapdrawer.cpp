@@ -8,6 +8,9 @@
 #include <QVector>
 #include <reshelpers/rescontainer.h>
 #include <iostream>
+#include "reshelpers/gametextureitem.h"
+#include "reshelpers/rescontainer.h"
+
 using namespace std;
 
 const QColor& MapDrawer::grayColor = QColor(255,0,255);
@@ -30,14 +33,14 @@ MapDrawer::MapDrawer(QGraphicsScene* sc , GameMap* m) {
 	ResLoader1::load1(pturs->attack,x,x,
 			"./tank_att/TankAttackA_E.pcx",20,1,QColor(192,192,192) );
 
-	Sprites.insert(tr("ptur"),pturs);
+	Sprites.insert(tr("ptur"),tanks);
     }
     _map = m;
     _scene = sc;    
+
 }
 void MapDrawer::repaint() {
     int hc = _map->height(), wc = _map->width();
-
     int leftOffset = 5, topOffset=5;
 
     for (int i=0; i<hc+2; ++i)
@@ -46,12 +49,12 @@ void MapDrawer::repaint() {
 	    if (sq==NULL)
 		continue;
 	    foreach (const Unit* u, sq->units) {
-		QGraphicsPixmapItem* item;
+		GameTextureItem* item;
 
 		if (unitGraphics.contains(u->id))
-		    item = unitGraphics.take(u->id);
+		    item = unitGraphics.value(u->id);
 		else {
-		    item = new QGraphicsPixmapItem(NULL,_scene);
+		    item = new GameTextureItem(_scene);
 		    unitGraphics.insert(u->id,item);
 		}
 		UnitPack* pack = dynamic_cast<UnitPack*>(Sprites.value(u->name));
@@ -73,15 +76,15 @@ void MapDrawer::repaint() {
 	    if (sq==NULL)
 		continue;
 	    foreach (const Unit* u, sq->units) {
-		QGraphicsPixmapItem* item;
+		GameTextureItem* item;
 
 		if (unitGraphics.contains(u->id))
-		    item = unitGraphics.value(u->id);
+		    item = unitGraphics[u->id];
 		else {
-		    item = new QGraphicsPixmapItem(NULL,_scene);
+		    item = new GameTextureItem(_scene);
 		    unitGraphics.insert(u->id,item);
 		}
-		UnitPack* pack = dynamic_cast<UnitPack*>(Sprites.value(u->name));
+		UnitPack* pack = dynamic_cast<UnitPack*>(Sprites[u->name]);
 		if (pack!=NULL) {
 		    QPixmap norm = pack->attack.at(0);
 		    int w = norm.width(), h = norm.height();
@@ -91,7 +94,10 @@ void MapDrawer::repaint() {
 		}
 	    }
 	}
-
+    qDebug() << "======== mapdrawer.cpp ================================";
+    foreach (QString s, Sprites.keys()) {
+	qDebug() << "=) " << s;
+    }
 }
 void MapDrawer::placeArmies() {
     int w  = _map->width();
@@ -128,7 +134,12 @@ void MapDrawer::paintField() {
 	left=5, top=5;
 
     int k=0;
-    SpritesPack* sp = Sprites.take("main_terrain") ;
+    SpritesPack* sp = Sprites["main_terrain"];
+    qDebug() << "in paintField";
+    foreach (QString s, Sprites.keys()) {
+	qDebug() << "=) " << s;
+    }
+
     TerrainPack* p = dynamic_cast<TerrainPack*>(sp);
     Images TerrainSprites = p->content;
 
@@ -137,7 +148,7 @@ void MapDrawer::paintField() {
 	    MapSquare* sq = _map->getSquare1(wc+i-j,j+i);
 	    if (sq != NULL)  {
 		QPixmap map = TerrainSprites.at(40);
-		QGraphicsPixmapItem* item = new QGraphicsPixmapItem(NULL, _scene);
+		GameTextureItem* item = new GameTextureItem( _scene);
 		item->setPixmap(map);
 		item->setOffset(left+w*i,top+j*h);
 		k++;
@@ -151,13 +162,22 @@ void MapDrawer::paintField() {
 	    MapSquare* sq = _map->getSquare1(wc+1+i-j,j+i);
 	    if (sq!=NULL) {
 		QPixmap map = TerrainSprites.at(18);
-		QGraphicsPixmapItem* item = new QGraphicsPixmapItem(NULL, _scene);
+		GameTextureItem* item = new GameTextureItem(_scene);
 		item->setPixmap(map);
 		item->setOffset(left+w*i,top+h*j);
 		k++;
 	    }
-    }    
+    }
 
+    if (Sprites.empty())
+	qDebug() << " map is EMPTY";
+    else {
+	qDebug() << " map not empty";
+	qDebug() << "in paintField";
+	foreach (QString s, Sprites.keys()) {
+	    qDebug() << "=) " << s;
+	}
+    }
     //_scene->removeItem();
 }
 

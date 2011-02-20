@@ -4,6 +4,7 @@
 #include "action/action.h"
 #include <QVector>
 #include <QQueue>
+#include "reshelpers/rescontainer.h"
 
 class FightingModel {
 protected:
@@ -35,6 +36,11 @@ public:
 			tanks.push_back(u);
 		}
 	}
+
+	qDebug() << "### fightingmodel.h ################################";
+	foreach (QString s, Sprites.keys()) {
+	    qDebug() << "=) " << s;
+	}
     }
 signals:
     void action(AbstractUnitAction*);
@@ -42,6 +48,11 @@ signals:
 public slots:
     void next() {
 	qDebug() << "model.next";
+	qDebug() << "### next() ################################";
+	foreach (QString s, Sprites.keys()) {
+	    qDebug() << "=) " << s;
+	}
+
 	if ((defenders.count()==0) || (tanks.count() == 0)) {
 	    emit action(new EndWarAction());
 	    return;
@@ -50,7 +61,8 @@ public slots:
 	// tank fires at the random unit
 	Unit* victim   = defenders.dequeue();
 	tanks.push_back(mainTank);
-	FireUnitAction* act = new FireUnitAction(mainTank->id,victim->id,true);
+	FireUnitAction* act = new FireUnitAction(mainTank->id, mainTank->name,
+						 victim->id, victim->name, true);
 	emit action(act);
     }
 };

@@ -2,41 +2,46 @@
 #define MAPDRAWER_H
 #include <QObject>
 #include <QGraphicsScene>
-#include "GameMap.h"
-#include "reshelpers/resloader1.h"
+#include <QTimer>
 #include <QPixmap>
 #include <QVector>
 #include <QMap>
-#include <reshelpers/rescontainer.h>
+#include "reshelpers/rescontainer.h"
 #include "action/action.h"
-
-static QMap<QString, SpritesPack*> Sprites;
+#include "reshelpers/gametextureitem.h"
+#include "GameMap.h"
+#include "reshelpers/resloader1.h"
 
 class MapDrawer : public QObject, public UnitVisitor {
     Q_OBJECT
 private:
     QGraphicsScene* _scene;
     GameMap* _map;
-    QMap<int, QGraphicsPixmapItem*> unitGraphics;
+    QMap<int, GameTextureItem*> unitGraphics;
     int _imageWidth, _imageHeight;
     static const QColor& grayColor;
+
 public:
     MapDrawer(QGraphicsScene* sc, GameMap* m);
     void repaint();
     void paintField();
     void placeArmies();
+
     virtual void visit(FireUnitAction& act) {
+
 	QString res = act.result ? "killed" : "fired";
-	qDebug() << act.unitID << " " << res << " " << act.targetID;
+	qDebug() << act.attackerID << " " << res << " " << act.victimID;
 	qDebug() << "visited FireUnitAction";
-	QGraphicsPixmapItem* item;
-	if (unitGraphics.contains(act.targetID)) {
-	    item = unitGraphics.take(act.targetID);
-	    _scene->removeItem(item);
+	GameTextureItem* item;
+	if (unitGraphics.contains(act.attackerID)) {
+	    item = unitGraphics.value(act.attackerID);
+	    QObject::connect(item,SIGNAL(animationEnded()),
+			     this,SLOT(endVisiting()) );
+	    item->animate(act.attackerName);
 	} else {
 
 	}
-	emit continueModel();
+	//emit continueModel();
     }
     virtual void visit(MoveUnitAction&) {
 	qDebug() << "visited MoveUnitAction";
@@ -60,6 +65,14 @@ public slots:
     void applyAction(AbstractUnitAction* u) {
 	u->accept(*this);
 	delete u;
+    }
+    void endVisiting() {
+
+    }
+
+private slots:
+    void wakeUpModel() {
+	emit continueModel();
     }
 };
 

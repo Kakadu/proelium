@@ -33,7 +33,7 @@ MapDrawer::MapDrawer(QGraphicsScene* sc , GameMap* m) {
 	ResLoader1::load1(pturs->attack,x,x,
 			"./tank_att/TankAttackA_E.pcx",20,1,QColor(192,192,192) );
 
-	Sprites.insert(tr("ptur"),tanks);
+	Sprites.insert(tr("ptur"),pturs);
     }
     _map = m;
     _scene = sc;    
@@ -168,7 +168,7 @@ void MapDrawer::paintField() {
 		k++;
 	    }
     }
-
+    qDebug() << "FUCKKKKKKKKKKKKKK!";
     if (Sprites.empty())
 	qDebug() << " map is EMPTY";
     else {

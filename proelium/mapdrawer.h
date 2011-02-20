@@ -38,8 +38,6 @@ public:
 	    QObject::connect(item,SIGNAL(animationEnded()),
 			     this,SLOT(endVisiting()) );
 	    item->animate(act.attackerName);
-	} else {
-
 	}
 	//emit continueModel();
     }
@@ -67,7 +65,8 @@ public slots:
 	delete u;
     }
     void endVisiting() {
-
+	qDebug() << "end visiting";
+	wakeUpModel();
     }
 
 private slots:

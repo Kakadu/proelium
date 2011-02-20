@@ -26,6 +26,6 @@ public:
     Images content;
 };
 
-static QMap<QString, SpritesPack*> Sprites;
+
 
 #endif // RESCONTAINER_H

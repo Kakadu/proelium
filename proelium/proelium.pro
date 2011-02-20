@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     action/action.cpp \
     reshelpers/rescontainer.cpp \
     fightingmodel.cpp \
-    reshelpers/gametextureitem.cpp
+    reshelpers/gametextureitem.cpp \
+    reshelpers/container.cpp
 HEADERS += mainwindow.h \
     framecollection.h \
     unit.h \
@@ -29,5 +30,6 @@ HEADERS += mainwindow.h \
     action/action.h \
     reshelpers/rescontainer.h \
     fightingmodel.h \
-    reshelpers/gametextureitem.h
+    reshelpers/gametextureitem.h \
+    reshelpers/container.h
 FORMS += mainwindow.ui

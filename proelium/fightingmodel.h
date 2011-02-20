@@ -36,11 +36,6 @@ public:
 			tanks.push_back(u);
 		}
 	}
-
-	qDebug() << "### fightingmodel.h ################################";
-	foreach (QString s, Sprites.keys()) {
-	    qDebug() << "=) " << s;
-	}
     }
 signals:
     void action(AbstractUnitAction*);
@@ -48,11 +43,6 @@ signals:
 public slots:
     void next() {
 	qDebug() << "model.next";
-	qDebug() << "### next() ################################";
-	foreach (QString s, Sprites.keys()) {
-	    qDebug() << "=) " << s;
-	}
-
 	if ((defenders.count()==0) || (tanks.count() == 0)) {
 	    emit action(new EndWarAction());
 	    return;

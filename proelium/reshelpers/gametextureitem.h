@@ -6,6 +6,8 @@
 #include "rescontainer.h"
 #include <QDebug>
 
+extern QMap<QString, SpritesPack*> Sprites;
+
 class GameTextureItem : public QObject, public QGraphicsPixmapItem
 {
 Q_OBJECT
@@ -16,11 +18,11 @@ Q_OBJECT
 public:
     explicit GameTextureItem(QGraphicsScene*);
     void animate(QString attName) {
-	qDebug() <<"attName = " << attName;
 	SpritesPack* temp = Sprites[attName];
-	qDebug() << "temp = " << temp;
 	curPack = dynamic_cast<UnitPack*>(temp);
 	animHelper->setStartValue(0);
+	animHelper->setTargetObject(this);
+	animHelper->setPropertyName("curSprite");
 	animHelper->setEndValue(curPack->attack.count()-1);
 	animHelper->start();
     }
@@ -35,6 +37,7 @@ signals:
     void animationEnded();
 private slots:
     void propAnimEnded() {
+	qDebug() << "propAnimationFinished";
 	emit animationEnded();
     }
 public slots:

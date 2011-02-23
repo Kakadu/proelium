@@ -32,4 +32,5 @@ HEADERS += mainwindow.h \
     fightingmodel.h \
     reshelpers/gametextureitem.h \
     reshelpers/container.h
-FORMS += mainwindow.ui
+FORMS += mainwindow.ui \
+    ../dialog.ui

@@ -31,7 +31,7 @@ MapDrawer::MapDrawer(QGraphicsScene* sc , GameMap* m) {
 
 	UnitPack* pturs = new UnitPack;
 	ResLoader1::load1(pturs->attack,x,x,
-			"./tank_att/TankAttackA_E.pcx",20,1,QColor(192,192,192) );
+			"./artillery/ArtilleryAttackA_N.pcx",20,1,QColor(192,192,192) );
 
 	Sprites.insert(tr("ptur"),pturs);
     }
@@ -94,10 +94,6 @@ void MapDrawer::repaint() {
 		}
 	    }
 	}
-    qDebug() << "======== mapdrawer.cpp ================================";
-    foreach (QString s, Sprites.keys()) {
-	qDebug() << "=) " << s;
-    }
 }
 void MapDrawer::placeArmies() {
     int w  = _map->width();
@@ -135,10 +131,6 @@ void MapDrawer::paintField() {
 
     int k=0;
     SpritesPack* sp = Sprites["main_terrain"];
-    qDebug() << "in paintField";
-    foreach (QString s, Sprites.keys()) {
-	qDebug() << "=) " << s;
-    }
 
     TerrainPack* p = dynamic_cast<TerrainPack*>(sp);
     Images TerrainSprites = p->content;
@@ -167,16 +159,6 @@ void MapDrawer::paintField() {
 		item->setOffset(left+w*i,top+h*j);
 		k++;
 	    }
-    }
-    qDebug() << "FUCKKKKKKKKKKKKKK!";
-    if (Sprites.empty())
-	qDebug() << " map is EMPTY";
-    else {
-	qDebug() << " map not empty";
-	qDebug() << "in paintField";
-	foreach (QString s, Sprites.keys()) {
-	    qDebug() << "=) " << s;
-	}
     }
     //_scene->removeItem();
 }

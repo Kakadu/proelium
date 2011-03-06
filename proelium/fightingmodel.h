@@ -48,12 +48,32 @@ public slots:
 	    return;
 	}
 	Unit* mainTank = tanks.dequeue();
-	// tank fires at the random unit
-	Unit* victim   = defenders.dequeue();
-	tanks.push_back(mainTank);
-	FireUnitAction* act = new FireUnitAction(mainTank->id, mainTank->name,
-						 victim->id, victim->name, true);
-	emit action(act);
+	if (random()%4==0) {
+	    // tank fires at the random unit
+	    Unit* victim   = defenders.dequeue();
+	    tanks.push_back(mainTank);
+	    FireUnitAction* act = new FireUnitAction(mainTank->id, mainTank->name,
+						     victim->id, victim->name, true);
+	    emit action(act);
+	} else {
+	    int i,j;
+	    MapSquare* initSq = _map->locateUnit(i,j,mainTank);
+	    MoveUnitAction* act;
+	    MapSquare* sq;
+	    if ((sq = _map->getSquare1(i+1,j)) != NULL) {
+		act = new MoveUnitAction(i+1,j,mainTank);
+		initSq->removeUnit(mainTank);
+		sq->addUnit(mainTank);
+		mainTank->incrPath(45);
+	    } else if  ((sq = _map->getSquare1(i,j+1)) != NULL) {
+		act = new MoveUnitAction(i,j+1,mainTank);
+		initSq->removeUnit(mainTank);
+		sq->addUnit(mainTank);
+		mainTank->incrPath(45);
+	    }
+	    tanks.push_back(mainTank);
+	    emit action(act);
+	}
     }
 };
 

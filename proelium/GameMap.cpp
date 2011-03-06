@@ -63,5 +63,8 @@ void GameMap::init() {
 }
 
 MapSquare* GameMap::getSquare1(int i,int j) {
+    int s = _width + _height +2;
+    if (i >= s || j >= s)
+	return NULL;
     return _field[i][j];
 }

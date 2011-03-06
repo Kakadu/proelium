@@ -19,6 +19,18 @@ public:
     int width() { return _width; }
     int height() { return _height; }
     void init();
+    MapSquare* locateUnit(int& i, int& j, Unit* uu) {
+	MapSquare* sq;
+	for (i=0; i<s(); ++i)
+	    for (j=0; j<s(); ++j) {
+	    if ((sq = _field[i][j]) != NULL)
+		foreach (Unit* u, sq->units)
+		    if (u->id == uu->id)
+			return sq;
+	}
+	return NULL;
+    }
+
     Unit* findUnit(int id) {
 	MapSquare* sq;
 	for (int i=0; i<s(); ++i)

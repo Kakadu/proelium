@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QtCore>
 #include <QTimer>
+#include <iostream>
 
 typedef int IDT;
 
@@ -18,10 +19,21 @@ private:
     QGraphicsPixmapItem* _view;
     QTimer* _timer;
     int _curframe,;
-
+    int _allPath;
+    int _nonEvaledPath;
 public:
     IDT id;
     QString name;
+    inline int allPath() { return _allPath; }
+    inline int nonEvaledPath() { return _nonEvaledPath; }
+    inline void incrPath(int x) {
+	_allPath+=x; _nonEvaledPath+=x;
+    }
+    inline void afterEvalPath(int x) {
+	if (x>_nonEvaledPath)
+	    throw std::exception();
+	_nonEvaledPath -=x;
+    }
 
     Unit& operator=(const Unit& u) {
 	Unit* a = new Unit(u.name, u.id);

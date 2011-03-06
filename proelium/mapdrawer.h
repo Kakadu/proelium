@@ -28,28 +28,82 @@ public:
     void placeArmies();
 
     virtual void visit(FireUnitAction& act) {
-
 	QString res = act.result ? "killed" : "fired";
 	qDebug() << act.attackerID << " " << res << " " << act.victimID;
-	qDebug() << "visited FireUnitAction";
+	//qDebug() << "visited FireUnitAction";
 	GameTextureItem* item;
 	if (unitGraphics.contains(act.attackerID)) {
 	    item = unitGraphics.value(act.attackerID);
-	    QObject::connect(item,SIGNAL(animationEnded()),
-			     this,SLOT(endVisiting()) );
-	    item->animate(act.attackerName);
+	    QObject::disconnect(item,SIGNAL(animationEnded(Invoker*)),
+				this,SLOT(endVisiting(Invoker*)) );
+	    QObject::connect(item,SIGNAL(animationEnded(Invoker*)),
+			     this,SLOT(endVisiting(Invoker*)) );
+	    item->animate(act, act.attackerName, NULL);
 	}
 	//emit continueModel();
     }
-    virtual void visit(MoveUnitAction&) {
-	qDebug() << "visited MoveUnitAction";
+
+    virtual void visit(MoveUnitAction& act) {
+	qDebug() << act.unit()->id << " moves";
+	//qDebug() << "visited MoveUnitAction";
+	Unit* u = act.unit();
+	int path = act.unit()->nonEvaledPath();
+	if (path < 25) {
+	    emit continueModel();
+	    return;
+	}
+
+	int i,j;
+	_map->locateUnit(i,j,act.unit());
+	if (i==-1 || j==-1) {
+	    throw "pizdets";	
+	}
+	_map->getSquare1(i,j)->removeUnit(act.unit());
+	qDebug() << "let's move on ("<<i<<", "<<j<<")";
+		;
+	MapSquare* sq;
+	if ((sq = _map->getSquare1(i,j+1)) != NULL) {
+	    sq->addUnit(u);
+	    qDebug() << "unit moved to (i,j+1)";
+	    //GameTextureItem* item = unitGraphics[u->id];
+	} else
+	if ((sq = _map->getSquare1(i+1,j)) != NULL) {
+	    sq->addUnit(u);
+	    qDebug() << "unit moved to (i+1,j6)";
+	    //GameTextureItem* item = unitGraphics[u->id];
+	} else {
+	    //qDebug() << "can't move: i = " << i << " and j = "<< j;
+	}
+	repaint();
+	//qDebug() << "unit moved";
 	emit continueModel();
+/*	MoveUnitAction act2(act);
+	act2.unit()->afterEvalPath(25);
+
+	class aaa : public Invoker {
+	    UnitVisitor* _v;
+	    MoveUnitAction _act;
+	public:
+	    aaa(MoveUnitAction& a, UnitVisitor* v) : _v(v),_act(a) {}
+	    virtual void invoke() {
+		_v->visit(_act);
+	    }
+	};
+
+	GameTextureItem* item;
+	if (unitGraphics.contains(act.unit()->id)) {
+	    item = unitGraphics.value(act.unit()->id);
+	    QObject::connect(item,SIGNAL(animationEnded(Invoker*)),
+			     this,SLOT(endVisiting(Invoker*)) );
+	    aaa* a = new aaa(act2,this);
+	    item->animate(MOVE, act.unit()->name,a);
+	} */
     }
     virtual void visit(EndWarAction&) {
-	qDebug() << "War never ends.";
+	//qDebug() << "War never ends.";
     }
     virtual void visit(NoAction&) {
-	qDebug() << "visited NoAction";
+	//qDebug() << "visited NoAction";
 	emit continueModel();
     }
 
@@ -64,9 +118,16 @@ public slots:
 	u->accept(*this);
 	delete u;
     }
-    void endVisiting() {
+    void endVisiting(Invoker* inv) {
 	qDebug() << "end visiting";
-	wakeUpModel();
+	if (inv == NULL) {
+	    wakeUpModel();
+	    return;
+	} else {
+
+	    inv->invoke();
+	    delete inv;
+	}
     }
 
 private slots:

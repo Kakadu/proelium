@@ -9,6 +9,7 @@
 #include <reshelpers/resloader1.h>
 
 
+
 typedef QVector<QPixmap> Images;
 class SpritesPack {
 private:

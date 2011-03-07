@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     w.setWindowState(Qt::WindowMaximized);
     //GameMap m(9,8);
 
-    GameMap m(5,4);
+    GameMap m(7,6);
     m.init();
     QGraphicsScene* sc = w.getScene();
     MapDrawer drawer(sc,&m);

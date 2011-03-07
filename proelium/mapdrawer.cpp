@@ -123,8 +123,6 @@ void MapDrawer::repaint() {
 		if (pack!=NULL) {
 		    QPixmap norm = pack->attack.at(0);
 		    int w = norm.width(), h = norm.height();
-		    //item->setOffset(leftOffset+i*_imageWidth + _imageWidth/2 - w/2,
-		    //  	    topOffset+j*_imageHeight + _imageHeight/2 - h/2);
 		    item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
 				    terrLoc.y() - h/2 + _imageHeight/2);
 		    item->setPixmap(norm);
@@ -145,21 +143,6 @@ void MapDrawer::placeArmies() {
 	unit = new Unit("ptur",1000+j);
 	_map->getSquare1(j,w+1+j)->addUnit(unit);
     }
-    /*
-    for (int i=0;i<w+h+2;++i) {
-	for (int j=0;j<w+h+2;++j) {
-	    MapSquare* sq;
-	    if ((sq = _map->getSquare1(i,j)) != NULL) {
-		if (sq->units.count() >0)
-		    cout << "9";
-		else
-		    cout << "1";
-	    }
-	    else cout << "0";
-	}
-	cout << "\n";
-    } */
-
 }
 /**
   Отрисовка рельефа.
@@ -202,6 +185,5 @@ void MapDrawer::paintField() {
 		k++;
 	    }
     }
-    //_scene->removeItem();
 }
 

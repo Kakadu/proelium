@@ -11,15 +11,10 @@
 
 extern QMap<QString, SpritesPack*> Sprites;
 
-typedef void (*cb_type)(void);
-
-class Invoker {
-public:
-    virtual void invoke() = 0;
-};
+/*
 enum AnimationType {
     ATTACK, MOVE, DEATH
-};
+};*/
 
 class GameTextureItem : public QObject, public QGraphicsPixmapItem
 {
@@ -33,7 +28,7 @@ Q_OBJECT
     uint _curSprite;
     UnitPack* curPack;
     QVector<QPixmap> sprites;
-    Invoker* _invoker;
+
     AbstractUnitAction* _lastAct;
     int _terrSpriteWidth, _terrSpriteHeight;    
 
@@ -74,13 +69,13 @@ public:
 	setOffset(offset().x()+dx, offset().y()+dy);
     }
 
-    void animate(FireUnitAction& act, QString, Invoker* inv) {
+    void animate(FireUnitAction& act) {
 	//qDebug() << "act.attackerName = " << act.attackerName;
 	qDebug() << "fire";
 	SpritesPack* temp = Sprites[act.attackerName];
 	curPack = dynamic_cast<UnitPack*>(temp);
 	sprites = curPack->attack;
-	_invoker = inv;
+
 	animHelper->setStartValue(0);
 	animHelper->setEndValue(sprites.count()-1);
 
@@ -98,13 +93,14 @@ public:
 	setPixmap(p);
     }
 signals:
-    void animationEnded(Invoker*);
+    void animationEnded();
+
 private slots:
     void propAnimEnded() {
 	qDebug() << "\tend animation";
 	const QPixmap p = curPack->normal.at(0);
 	setNewPixmap(p);
-	emit animationEnded(_invoker);
+	emit animationEnded();
     }
 public slots:
 

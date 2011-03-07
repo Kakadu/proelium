@@ -35,15 +35,15 @@ public:
 	GameTextureItem* item;
 	if (unitGraphics.contains(act.attackerID)) {
 	    item = unitGraphics.value(act.attackerID);
-	    QObject::disconnect(item,SIGNAL(animationEnded(Invoker*)),
-				this,SLOT(endVisiting(Invoker*)) );
-	    QObject::connect(item,SIGNAL(animationEnded(Invoker*)),
-			     this,SLOT(endVisiting(Invoker*)) );
-	    item->animate(act, act.attackerName, NULL);
+	    QObject::disconnect(item,SIGNAL(animationEnded()),
+				this,SLOT(endVisiting()) );
+	    QObject::connect(item,SIGNAL(animationEnded()),
+			     this,SLOT(endVisiting()) );
+	    item->animate(act);
 
 	} else {
 	    qDebug() << "Unit with id " << act.attackerID << "not found. continue";
-	    endVisiting(NULL);
+	    endVisiting();
 	}	
     }
 
@@ -58,14 +58,14 @@ public:
 	if (unitGraphics.contains(act.unit()->id)) {
 	    item = unitGraphics.value(act.unit()->id);
 	    QPoint newCoords = screenCoords(act.x(), act.y());
-	    QObject::disconnect(item,SIGNAL(animationEnded(Invoker*)),
-				this,SLOT(endVisiting(Invoker*)) );
-	    QObject::connect(item,SIGNAL(animationEnded(Invoker*)),
-			     this,SLOT(endVisiting(Invoker*)) );
+	    QObject::disconnect(item,SIGNAL(animationEnded()),
+				this,SLOT(endVisiting()) );
+	    QObject::connect(item,SIGNAL(animationEnded()),
+			     this,SLOT(endVisiting()) );
 	    item->animate(act,-1,_map,newCoords);
 	}else {
 	    qDebug() << "Unit with id " << act.unit()->id << "not found. continue";
-	    endVisiting(NULL);
+	    endVisiting();
 	}
     }
     virtual void visit(EndWarAction&) {
@@ -84,12 +84,10 @@ public slots:
 	unitGraphics.remove(x);
     }
     void applyAction(AbstractUnitAction* u) {
-	qDebug() << u;
-	MoveUnitAction* mact = dynamic_cast<MoveUnitAction*>(u);
 	u->accept(*this);
 	delete u;
     }
-    void endVisiting(Invoker*) {
+    void endVisiting() {
 	qDebug() << "end visiting";
 	    wakeUpModel();
 	    return;

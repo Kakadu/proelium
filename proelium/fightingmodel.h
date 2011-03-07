@@ -6,6 +6,8 @@
 #include <QQueue>
 #include "reshelpers/rescontainer.h"
 
+
+extern QPair<int,int> directions[8];
 /**
   Базовый класс моделей боя. Наследуйте его для своих моделей.
   */
@@ -80,19 +82,22 @@ public slots:
 	    MapSquare* sq;
 	    // TODO: надо нормально написать в каких направлениях юнит будет двигаться
 	    // к цели. думаю направлений будет всего три: Юг, Юго-Запад, и Юго-Восток.
-	    if ((sq = _map->getSquare1(i+1,j)) != NULL) {
-		act = new MoveUnitAction(i,j,i+1,j,mainTank);
+	    QPair<int,int> dd(0,0);
+	    while (true) {
+		int d = random()%3;
+		dd = directions[2+d];
+		sq = _map->getSquare1(i+dd.first,j+dd.second);
+		if (sq!=NULL)
+		    break;
+	    }
+	    if (sq == NULL) {
+		throw "a very big problem in fighting model";
+	    } else {
+		act = new MoveUnitAction(i,j,i+dd.first,j+dd.second, mainTank);
 		initSq->removeUnit(mainTank);
 		sq->addUnit(mainTank);
-		//mainTank->incrPath(45);
-	    } else if  ((sq = _map->getSquare1(i,j-1)) != NULL) {
-		act = new MoveUnitAction(i,j,i,j-1,mainTank);
-		initSq->removeUnit(mainTank);
-		sq->addUnit(mainTank);
-		//mainTank->incrPath(45);
 	    }
 	    tanks.push_back(mainTank);
-	    qDebug() << act;
 	    emit action(act);
 	}
     }

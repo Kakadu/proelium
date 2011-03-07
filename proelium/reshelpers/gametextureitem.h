@@ -25,6 +25,7 @@ class GameTextureItem : public QObject, public QGraphicsPixmapItem
 {
 Q_OBJECT
     Q_PROPERTY(int curSprite READ curSprite WRITE setCurSprite);
+    Q_PROPERTY(QPointF offset READ offset WRITE setOffset);
     int DURATION;
     QPropertyAnimation* animHelper;
     QPropertyAnimation* animHelperMove;
@@ -34,27 +35,58 @@ Q_OBJECT
     QVector<QPixmap> sprites;
     Invoker* _invoker;
     AbstractUnitAction* _lastAct;
-    //-----------------------
+    int _terrSpriteWidth, _terrSpriteHeight;    
 
 public:
-    explicit GameTextureItem(QGraphicsScene*);
-    void animate(MoveUnitAction& act, int id, GameMap* m) {
+    explicit GameTextureItem(QGraphicsScene*,int,int);
+    void animate(MoveUnitAction& act, int, GameMap* const , QPoint& newLoc) {
 	qDebug() << "move";
-	Unit* u = m->findUnit(id);
-	SpritesPack* pack = Sprites[u->name];
+	Unit* u = act.unit();
 
+	SpritesPack* pack = Sprites[u->name];
+	curPack = dynamic_cast<UnitPack*>(pack);
+
+	aniGroup->removeAnimation(animHelper);
+	aniGroup->removeAnimation(animHelperMove);
+	aniGroup->addAnimation(animHelperMove);
+	sprites = curPack->move;
+	/*
+	  Тут сложности с пересчетом координат. Проблема в том, что размеры картинок
+	  разные. Т.е. чтобы перейти из спрайта в нормальном состоянии к движению,
+	  надо подсчитать разницу в размере спрайтов, потом исправить offset, и потом
+	  запустить анимацию. А в конце вернуть в обратное состояние.
+	  */
+	int dx1 = newLoc.x() - (offset().x() + pixmap().width()/2 - _terrSpriteWidth/2),
+	    dy1 = newLoc.y() - (offset().y() + pixmap().height()/2 - _terrSpriteHeight/2);
+
+	setNewPixmap(sprites.at(0));
+	animHelperMove->setStartValue(this->offset());
+
+	animHelperMove->setEndValue(QPointF(offset().x()+dx1,
+					    offset().y()+dy1 ) );
+
+	aniGroup->start();
+    }
+    void setNewPixmap(const QPixmap& p) {
+	int dx = pixmap().width()/2  - p.width()/2,
+	    dy = pixmap().height()/2  - p.height()/2;
+	setPixmap(p);
+	setOffset(offset().x()+dx, offset().y()+dy);
     }
 
-    void animate(FireUnitAction& act, QString attName, Invoker* inv) {
+    void animate(FireUnitAction& act, QString, Invoker* inv) {
 	//qDebug() << "act.attackerName = " << act.attackerName;
 	qDebug() << "fire";
 	SpritesPack* temp = Sprites[act.attackerName];
 	curPack = dynamic_cast<UnitPack*>(temp);
 	sprites = curPack->attack;
 	_invoker = inv;
+	animHelper->setStartValue(0);
 	animHelper->setEndValue(sprites.count()-1);
+
+	aniGroup->removeAnimation(animHelper);
 	aniGroup->removeAnimation(animHelperMove);
-	//qDebug() << "\tstart animation";
+	aniGroup->addAnimation(animHelper);
 	aniGroup->start();
     }
     int curSprite() {
@@ -70,12 +102,8 @@ signals:
 private slots:
     void propAnimEnded() {
 	qDebug() << "\tend animation";
-
-/*	FireUnitAction * act = dynamic_cast<FireUnitAction*>(_lastAct);
-	if (act!=NULL) {
-	    int id = act->victimID;
-
-	} */
+	const QPixmap p = curPack->normal.at(0);
+	setNewPixmap(p);
 	emit animationEnded(_invoker);
     }
 public slots:

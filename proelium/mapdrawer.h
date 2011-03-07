@@ -6,6 +6,7 @@
 #include <QPixmap>
 #include <QVector>
 #include <QMap>
+#include <QPoint>
 #include "reshelpers/rescontainer.h"
 #include "action/action.h"
 #include "reshelpers/gametextureitem.h"
@@ -15,12 +16,13 @@
 class MapDrawer : public QObject, public UnitVisitor {
     Q_OBJECT
 private:
+    int LEFT_OFFSET, TOP_OFFSET;
     QGraphicsScene* _scene;
     GameMap* _map;
     QMap<int, GameTextureItem*> unitGraphics;
     int _imageWidth, _imageHeight;
     static const QColor& grayColor;
-
+    QPoint screenCoords(int,int);
 public:
     MapDrawer(QGraphicsScene* sc, GameMap* m);
     void repaint();
@@ -30,7 +32,6 @@ public:
     virtual void visit(FireUnitAction& act) {
 	QString res = act.result ? "killed" : "fired";
 	qDebug() << act.attackerID << " " << res << " " << act.victimID;
-	//qDebug() << "visited FireUnitAction";
 	GameTextureItem* item;
 	if (unitGraphics.contains(act.attackerID)) {
 	    item = unitGraphics.value(act.attackerID);
@@ -39,68 +40,36 @@ public:
 	    QObject::connect(item,SIGNAL(animationEnded(Invoker*)),
 			     this,SLOT(endVisiting(Invoker*)) );
 	    item->animate(act, act.attackerName, NULL);
-	}
-	//emit continueModel();
+
+	} else {
+	    qDebug() << "Unit with id " << act.attackerID << "not found. continue";
+	    endVisiting(NULL);
+	}	
     }
 
     virtual void visit(MoveUnitAction& act) {
+	/*
+	  Тут логика сейчас представляется мне такой. Танк двигает из одной
+	  клетки во вторую. Мы двигаем спрайт по прямой, одновременно сменяя кадры.
+	  Т.е. показываем две анимации параллельно.
+	  */
 	qDebug() << act.unit()->id << " moves";
-	//qDebug() << "visited MoveUnitAction";
-	Unit* u = act.unit();
-	int path = act.unit()->nonEvaledPath();
-	if (path < 25) {
-	    emit continueModel();
-	    return;
-	}
-
-	int i,j;
-	_map->locateUnit(i,j,act.unit());
-	if (i==-1 || j==-1) {
-	    throw "pizdets";	
-	}
-	_map->getSquare1(i,j)->removeUnit(act.unit());
-	qDebug() << "let's move on ("<<i<<", "<<j<<")";
-		;
-	MapSquare* sq;
-	if ((sq = _map->getSquare1(i,j+1)) != NULL) {
-	    sq->addUnit(u);
-	    qDebug() << "unit moved to (i,j+1)";
-	    //GameTextureItem* item = unitGraphics[u->id];
-	} else
-	if ((sq = _map->getSquare1(i+1,j)) != NULL) {
-	    sq->addUnit(u);
-	    qDebug() << "unit moved to (i+1,j6)";
-	    //GameTextureItem* item = unitGraphics[u->id];
-	} else {
-	    //qDebug() << "can't move: i = " << i << " and j = "<< j;
-	}
-	repaint();
-	//qDebug() << "unit moved";
-	emit continueModel();
-/*	MoveUnitAction act2(act);
-	act2.unit()->afterEvalPath(25);
-
-	class aaa : public Invoker {
-	    UnitVisitor* _v;
-	    MoveUnitAction _act;
-	public:
-	    aaa(MoveUnitAction& a, UnitVisitor* v) : _v(v),_act(a) {}
-	    virtual void invoke() {
-		_v->visit(_act);
-	    }
-	};
-
 	GameTextureItem* item;
 	if (unitGraphics.contains(act.unit()->id)) {
 	    item = unitGraphics.value(act.unit()->id);
+	    QPoint newCoords = screenCoords(act.x(), act.y());
+	    QObject::disconnect(item,SIGNAL(animationEnded(Invoker*)),
+				this,SLOT(endVisiting(Invoker*)) );
 	    QObject::connect(item,SIGNAL(animationEnded(Invoker*)),
 			     this,SLOT(endVisiting(Invoker*)) );
-	    aaa* a = new aaa(act2,this);
-	    item->animate(MOVE, act.unit()->name,a);
-	} */
+	    item->animate(act,-1,_map,newCoords);
+	}else {
+	    qDebug() << "Unit with id " << act.unit()->id << "not found. continue";
+	    endVisiting(NULL);
+	}
     }
     virtual void visit(EndWarAction&) {
-	//qDebug() << "War never ends.";
+	qDebug() << "War never ends.";
     }
     virtual void visit(NoAction&) {
 	//qDebug() << "visited NoAction";
@@ -115,19 +84,15 @@ public slots:
 	unitGraphics.remove(x);
     }
     void applyAction(AbstractUnitAction* u) {
+	qDebug() << u;
+	MoveUnitAction* mact = dynamic_cast<MoveUnitAction*>(u);
 	u->accept(*this);
 	delete u;
     }
-    void endVisiting(Invoker* inv) {
+    void endVisiting(Invoker*) {
 	qDebug() << "end visiting";
-	if (inv == NULL) {
 	    wakeUpModel();
 	    return;
-	} else {
-
-	    inv->invoke();
-	    delete inv;
-	}
     }
 
 private slots:

@@ -23,17 +23,23 @@ public:
 };
 
 class MoveUnitAction : public AbstractUnitAction {
+    int _xOld, _yOld, _x, _y;
     Unit* _u;
-    int _x, _y;
 public:
     Unit* unit() { return _u; }
     int x() { return _x; }
     int y() { return _y; }
-    MoveUnitAction(int x, int y,Unit* u) : _x(x),_y(y),_u(u) {}
+    int xOld() { return _xOld; }
+    int yOld() { return _yOld; }
+
+    MoveUnitAction(int xo, int yo, int x, int y,Unit* u)
+	: _xOld(xo), _yOld(yo), _x(x),_y(y),_u(u) {}
     MoveUnitAction(MoveUnitAction& act) {
 	_u = act.unit();
 	_x = act.x();
 	_y = act.y();
+	_xOld = act.xOld();
+	_yOld = act.yOld();
     }
 
     virtual void accept(UnitVisitor &v) {

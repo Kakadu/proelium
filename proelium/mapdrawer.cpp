@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QPoint>
 #include <QGraphicsScene>
 #include "mapdrawer.h"
 #include "GameMap.h"
@@ -16,6 +17,7 @@ using namespace std;
 const QColor& MapDrawer::grayColor = QColor(255,0,255);
 
 MapDrawer::MapDrawer(QGraphicsScene* sc , GameMap* m) {
+    LEFT_OFFSET = TOP_OFFSET = 5;
     if (Sprites.count() == 0) {
 	int x;
 	TerrainPack *p = new TerrainPack;
@@ -27,42 +29,74 @@ MapDrawer::MapDrawer(QGraphicsScene* sc , GameMap* m) {
 	UnitPack* tanks = new UnitPack;
 	ResLoader1::load1(tanks->attack,x,x,
 			  "./tank_att/TankAttackA_W.pcx",20,1,QColor(192,192,192) );
+	ResLoader1::load1(tanks->move,x,x,
+			  "./tank_run/TankRun_SW.pcx",14,1,QColor(192,192,192) );
+	//TODO: load new resources in future
+	tanks->normal = tanks->attack;
 	Sprites.insert(tr("tank"),tanks);
 
 	UnitPack* pturs = new UnitPack;
 	ResLoader1::load1(pturs->attack,x,x,
 			"./artillery/ArtilleryAttackA_N.pcx",20,1,QColor(192,192,192) );
-
+	//TODO: load new resources in future
+	pturs->normal = pturs->attack;
 	Sprites.insert(tr("ptur"),pturs);
     }
     _map = m;
     _scene = sc;    
 
 }
+/**
+  Получить по клетке в карте её экранные координаты.
+  */
+QPoint MapDrawer::screenCoords(int x, int y) {
+    int wc = _map->width(),
+	w = _imageWidth,
+	h  = _imageHeight;
+
+    if ((x+y-wc) % 2 == 0) {
+	// первый вариант
+	int i = (x+y-wc)/2, j = y-i;
+	return QPoint(LEFT_OFFSET+w*i,TOP_OFFSET+h*j);
+    } else if ((x+y-wc) % 2 == 1) {
+	int i = (x+y-wc-1)/2, j = y-i;
+	return QPoint(LEFT_OFFSET+w*i+w/2,TOP_OFFSET+h*j-h/2);
+    }
+    throw "cant get screen coords";
+}
+
+
+/**
+  Перерисовка юнитов
+  */
 void MapDrawer::repaint() {
     int hc = _map->height(), wc = _map->width();
-    int leftOffset = 5, topOffset=5;
+    int leftOffset = LEFT_OFFSET, topOffset=TOP_OFFSET;
 
     for (int i=0; i<hc+2; ++i)
 	for (int j=0; j<wc+1; ++j) {
 	    MapSquare* sq = _map->getSquare1(wc+i-j,j+i);
 	    if (sq==NULL)
 		continue;
+	    QPoint terrLoc = screenCoords(wc+i-j,j+i);
+	    //TODO: итериться наверное не стоит, надо рисовать только верхний элемент
 	    foreach (const Unit* u, sq->units) {
 		GameTextureItem* item;
 
 		if (unitGraphics.contains(u->id))
 		    item = unitGraphics.value(u->id);
 		else {
-		    item = new GameTextureItem(_scene);
+		    item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
 		    unitGraphics.insert(u->id,item);
 		}
 		UnitPack* pack = dynamic_cast<UnitPack*>(Sprites.value(u->name));
 		if (pack!=NULL) {
 		    QPixmap norm = pack->attack.at(0);
 		    int w = norm.width(), h = norm.height();
-		    item->setOffset(leftOffset+i*_imageWidth + _imageWidth/2 - w/2,
-				    topOffset+j*_imageHeight + _imageHeight/2 - h/2);
+		    //item->setOffset(leftOffset+i*_imageWidth + _imageWidth/2 - w/2,
+		    //    	    topOffset+j*_imageHeight + _imageHeight/2 - h/2);
+		    item->setOffset(terrLoc.x() - w/2,
+				    terrLoc.y() - h/2);
 		    item->setPixmap(norm);
 		}
 	    }
@@ -75,27 +109,31 @@ void MapDrawer::repaint() {
 	    MapSquare* sq = _map->getSquare1(wc+1+i-j,j+i);
 	    if (sq==NULL)
 		continue;
+	    QPoint terrLoc = screenCoords(wc+i-j+1,j+i);
 	    foreach (const Unit* u, sq->units) {
 		GameTextureItem* item;
 
 		if (unitGraphics.contains(u->id))
 		    item = unitGraphics[u->id];
 		else {
-		    item = new GameTextureItem(_scene);
+		    item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
 		    unitGraphics.insert(u->id,item);
 		}
 		UnitPack* pack = dynamic_cast<UnitPack*>(Sprites[u->name]);
 		if (pack!=NULL) {
 		    QPixmap norm = pack->attack.at(0);
 		    int w = norm.width(), h = norm.height();
-		    item->setOffset(leftOffset+i*_imageWidth + _imageWidth/2 - w/2,
-				    topOffset+j*_imageHeight + _imageHeight/2 - h/2);
+		    //item->setOffset(leftOffset+i*_imageWidth + _imageWidth/2 - w/2,
+		    //  	    topOffset+j*_imageHeight + _imageHeight/2 - h/2);
+		    item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
+				    terrLoc.y() - h/2 + _imageHeight/2);
 		    item->setPixmap(norm);
 		}
 	    }
 	}
 }
 void MapDrawer::placeArmies() {
+    // Расстановка армии. TODO: вынести в другое место.
     int w  = _map->width();
     int h = _map->height();
     int aaa[w+h+2][w+h+2];
@@ -123,7 +161,9 @@ void MapDrawer::placeArmies() {
     } */
 
 }
-
+/**
+  Отрисовка рельефа.
+  */
 void MapDrawer::paintField() {
     int hc = _map->height(), wc = _map->width(),
 	h = _imageHeight, w = _imageWidth,
@@ -140,9 +180,10 @@ void MapDrawer::paintField() {
 	    MapSquare* sq = _map->getSquare1(wc+i-j,j+i);
 	    if (sq != NULL)  {
 		QPixmap map = TerrainSprites.at(40);
-		GameTextureItem* item = new GameTextureItem( _scene);
+		GameTextureItem* item = new GameTextureItem( _scene,_imageWidth,_imageHeight);
 		item->setPixmap(map);
-		item->setOffset(left+w*i,top+j*h);
+		QPoint loc = screenCoords(wc+i-j,j+i);
+		item->setOffset(loc.x(),loc.y());
 		k++;
 	    }
     }
@@ -154,9 +195,10 @@ void MapDrawer::paintField() {
 	    MapSquare* sq = _map->getSquare1(wc+1+i-j,j+i);
 	    if (sq!=NULL) {
 		QPixmap map = TerrainSprites.at(18);
-		GameTextureItem* item = new GameTextureItem(_scene);
+		GameTextureItem* item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
 		item->setPixmap(map);
-		item->setOffset(left+w*i,top+h*j);
+		QPoint loc = screenCoords(wc+1+i-j,j+i);
+		item->setOffset(loc.x(),loc.y());
 		k++;
 	    }
     }

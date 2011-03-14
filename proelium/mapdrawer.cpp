@@ -21,23 +21,24 @@ MapDrawer::MapDrawer(QGraphicsScene* sc , GameMap* m) {
     if (Sprites.count() == 0) {
 	int x;
 	TerrainPack *p = new TerrainPack;
-	ResLoader1::load1(p->content,_imageHeight,_imageWidth, "main_terrain.pcx",9,9,grayColor);
+	ResLoader1::load1(p->content,_imageHeight,_imageWidth,
+			  "main_terrain.png",9,9,grayColor);
 	Sprites.insert(tr("main_terrain"),p);
 	_imageHeight = p->content.at(0).height();
 	_imageWidth =  p->content.at(0).width();
 
 	UnitPack* tanks = new UnitPack;
 	ResLoader1::load1(tanks->attack,x,x,
-			  "./tank_att/TankAttackA_W.pcx",20,1,QColor(192,192,192) );
+			  "./tank_att/TankAttackA_W.png",20,1,QColor(192,192,192) );
 	ResLoader1::load1(tanks->move,x,x,
-			  "./tank_run/TankRun_SW.pcx",14,1,QColor(192,192,192) );
+			  "./tank_run/TankRun_SW.png",14,1,QColor(192,192,192) );
 	//TODO: load new resources in future
 	tanks->normal = tanks->attack;
 	Sprites.insert(tr("tank"),tanks);
 
 	UnitPack* pturs = new UnitPack;
 	ResLoader1::load1(pturs->attack,x,x,
-			"./artillery/ArtilleryAttackA_N.pcx",20,1,QColor(192,192,192) );
+			"./artillery/ArtilleryAttackA_N.png",20,1,QColor(192,192,192) );
 	//TODO: load new resources in future
 	pturs->normal = pturs->attack;
 	Sprites.insert(tr("ptur"),pturs);

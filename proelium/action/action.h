@@ -52,7 +52,7 @@ public:
     const int victimID;
     QString attackerName;
     QString victimName;
-    const int result;
+    const bool result; // true if killed
     FireUnitAction(int id, QString aName, int tid, QString vName, bool r) :
 	    attackerID(id), victimID(tid),
 	    attackerName(aName), victimName(vName), result(r) {}

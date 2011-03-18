@@ -37,20 +37,26 @@ public:
     virtual void visit(FireUnitAction& act) {
 	QString res = act.result ? "killed" : "fired";
 	qDebug() << act.attackerID << " " << res << " " << act.victimID;
+
 	GameTextureItem *itemFire = NULL, *itemDeath = NULL;
+	aniGroup->clear();
 	if (unitGraphics.contains(act.attackerID))
 	    itemFire = unitGraphics.value(act.attackerID);
-	if (unitGraphics.contains(act.victimID))
-	    itemDeath = unitGraphics.value(act.victimID);
-	Q_ASSERT(itemFire != NULL && itemDeath != NULL);
+	Q_ASSERT(itemFire != NULL);
+	aniGroup->addAnimationSeq(itemFire->animate(act));
+	RemoveTimer* timer = NULL;
 
-	aniGroup->clear();	
-	aniGroup->addAnimationSeq(itemFire->animate(act) );
-	aniGroup->addAnimationSeq(itemDeath->animateDeath(act.victimName));
-	// victim can still alive
-	RemoveTimer* timer = new RemoveTimer(this,itemDeath);
-	QObject::connect(timer, SIGNAL(timeout2(GameTextureItem*)),
-			 this, SLOT(setDeathPixmap(GameTextureItem*)));
+	if (act.result) {
+	    // victim can still alive
+	    if (unitGraphics.contains(act.victimID))
+		itemDeath = unitGraphics.value(act.victimID);
+	    Q_ASSERT(itemDeath != NULL);
+	    aniGroup->addAnimationSeq(itemDeath->animateDeath(act.victimName));
+
+	    timer = new RemoveTimer(this,itemDeath);
+	    QObject::connect(timer, SIGNAL(timeout2(GameTextureItem*)),
+			     this, SLOT(setDeathPixmap(GameTextureItem*)));
+	}
 	aniGroup->startSeq(timer);
     }
 

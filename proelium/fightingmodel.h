@@ -103,4 +103,63 @@ public slots:
     }
 };
 
+/**
+ * Модель: ничего не двигается. стреляют обе стороны
+ */
+class SimpleFightingModel2: public QObject, protected FightingModel {
+    Q_OBJECT
+private:
+    bool ended, tankIsNext;
+    QQueue<Unit*> tanks;
+    QQueue<Unit*> defenders;
+public:
+    SimpleFightingModel2(GameMap* m) {
+	this->_map = m;
+	ended = false;
+	tankIsNext = true;
+	int s = m->width() + m->height() + 2;
+	MapSquare* sq;
+	for (int i=0; i<s; ++i)
+	    for (int j=0; j<s; ++j) {
+		sq = m->getSquare1(i,j);
+		if (sq==NULL)
+		    continue;
+		foreach (Unit* u, sq->units) {
+		    if (u->id > 100)
+			defenders.push_back(u);
+		    else
+			tanks.push_back(u);
+		}
+	}
+    }
+
+signals:
+    void action(AbstractUnitAction*);
+
+public slots:
+    void next() {
+	qDebug() << "model2.next";
+	if ((defenders.count()==0) || (tanks.count() == 0)) {
+	    emit action(new EndWarAction());
+	    return;
+	}
+	FireUnitAction* act = NULL;
+	if (tankIsNext) {
+	    Unit* mainTank = tanks.dequeue();
+	    Unit* victim   = defenders.dequeue();
+	    tanks.push_back(mainTank);
+	    act = new FireUnitAction(mainTank->id, mainTank->name,
+				     victim->id, victim->name, true);
+	} else {
+	    Unit* attacker = defenders.dequeue();
+	    Unit* victim   = tanks.dequeue();
+	    defenders.push_back(attacker);
+	    act = new FireUnitAction(attacker->id, attacker->name,
+				     victim->id, victim->name, true);
+	}
+	tankIsNext = !tankIsNext;
+	emit action(act);
+    }
+};
+
 #endif // FIGHTINGMODEL_H

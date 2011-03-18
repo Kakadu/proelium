@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     drawer.placeArmies();
     drawer.repaint();
 
-    SimpleFightingModel model(&m);
+    SimpleFightingModel2 model(&m);
 
 
     QObject::connect(&model,SIGNAL(action(AbstractUnitAction*)),

@@ -110,10 +110,8 @@ void MapDrawer::repaint() {
 		if (pack!=NULL) {
 		    QPixmap norm = pack->attack.at(0);
 		    int w = norm.width(), h = norm.height();
-		    //item->setOffset(leftOffset+i*_imageWidth + _imageWidth/2 - w/2,
-		    //    	    topOffset+j*_imageHeight + _imageHeight/2 - h/2);
-		    item->setOffset(terrLoc.x() - w/2,
-				    terrLoc.y() - h/2);
+		    item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
+				    terrLoc.y() - h/2 + _imageHeight/2);
 		    item->setPixmap(norm);
 		}
 	    }
@@ -151,14 +149,25 @@ void MapDrawer::placeArmies() {
     // Расстановка армии. TODO: вынести в другое место.
     int w  = _map->width();
     int h = _map->height();
-    int aaa[w+h+2][w+h+2];
+    const int s = w+h+2;
+/*
     for (int j=0; j<=h; ++j) {
-	Unit* unit = new Unit("tank",j);
-	_map->getSquare1(w+1+j,j)->addUnit(unit);
-	aaa[w+1+j][j]=1;
+	    //танки сверху
+	    Unit* unit = new Unit("tank",j);
+	   _map->getSquare1(w+1+j,j)->addUnit(unit);
+	   //гаубицы снизу
+	   unit = new Unit("ptur",1000+j);
+	   _map->getSquare1(j,w+1+j)->addUnit(unit);
+    }
+    */
 
+    for (int j=0; j<=w; ++j) {
+	//танки слева
+	Unit* unit = new Unit("tank",j);
+	_map->getSquare1(j,w-j)->addUnit(unit);
+	//гаубицы справа
 	unit = new Unit("ptur",1000+j);
-	_map->getSquare1(j,w+1+j)->addUnit(unit);
+	_map->getSquare1(h+1+j,s-1-j)->addUnit(unit);
     }
 }
 /**
@@ -175,6 +184,7 @@ void MapDrawer::paintField() {
     TerrainPack* p = dynamic_cast<TerrainPack*>(sp);
     Images TerrainSprites = p->content;
 
+    //зеленые квадраты
     for (int i=0; i<hc+2; ++i)
 	for (int j=0; j<wc+1; ++j) {
 	    MapSquare* sq = _map->getSquare1(wc+i-j,j+i);
@@ -188,7 +198,7 @@ void MapDrawer::paintField() {
 	    }
     }
 
-    //large lines
+    //large lines желтые квадраты
     left += w/2; top -= h/2;
     for (int i=0; i<hc+1; ++i)
 	for (int j=0; j<wc+2; ++j) {

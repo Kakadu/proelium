@@ -208,18 +208,22 @@ public:
                 Unit* victim   = defenders.dequeue();
                 tanks.push_back(mainTank);
                 succes = random()%5;
-                succes = !(succes);
+                succes = !succes;
                 act = new FireUnitAction(mainTank->id, mainTank->name,
                                          victim->id, victim->name, succes);
+                if (!succes)
+                    defenders.push_back(victim);
             }
             else    {
                 Unit* attacker = defenders.dequeue();
                 Unit* victim   = tanks.dequeue();
                 defenders.push_back(attacker);
-                succes = random()%3;
-                succes = !(succes);
+                succes = random()%4;
+                succes = !succes;
                 act = new FireUnitAction(attacker->id, attacker->name,
                                          victim->id, victim->name, succes);
+                if (!(succes))
+                    tanks.push_back(victim);
 
             }
             tank_queue++;

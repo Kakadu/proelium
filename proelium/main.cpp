@@ -11,13 +11,14 @@
 #include "mainwindow.h"
 #include "fightingmodel.h"
 #include "reshelpers/rescontainer.h"
+#include <ctime>
 
 extern QMap<QString, SpritesPack*> Sprites;
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-
+    srand(time(NULL));
     MainWindow w;
     w.setWindowState(Qt::WindowMaximized);
     //GameMap m(9,8);

@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QQueue>
 #include "reshelpers/rescontainer.h"
+#include "GlobalConst.h"
 
 
 extern QPair<int,int> directions[8];
@@ -84,8 +85,9 @@ public slots:
 	    // к цели. думаю направлений будет всего три: Юг, Юго-Запад, и Юго-Восток.
 	    QPair<int,int> dd(0,0);
 	    while (true) {
-		int d = random()%3;
-		dd = directions[2+d];
+//		int d = random()%3;
+                int d = 0;
+                dd = directions[d];
 		sq = _map->getSquare1(i+dd.first,j+dd.second);
 		if (sq!=NULL)
 		    break;
@@ -160,6 +162,69 @@ public slots:
 	tankIsNext = !tankIsNext;
 	emit action(act);
     }
+};
+
+class MainFightingModel: public QObject, protected FightingModel {
+    Q_OBJECT
+private:
+    int tank_queue;
+    bool succes;
+    QQueue<Unit*> tanks;
+    QQueue<Unit*> defenders;
+    ModelParam model_descrip;
+public:
+    MainFightingModel(GameMap* m, ModelParam* current)   {
+        this->_map = m;
+        model_descrip = *current;
+        tank_queue = 0;
+        int s = m->width() + m->height() + 2;
+        MapSquare* sd;
+        for (int i = 0; i < s; ++i)
+            for (int j = 0; j < s; ++j) {
+            sd = m->getSquare1(i,j);
+            if (sd==NULL)
+                continue;
+            foreach(Unit* u, sd->units) {
+                if (u->id>100)
+                    defenders.push_back(u);
+                else
+                    tanks.push_back(u);
+            }
+        }
+    }
+    signals:
+        void action(AbstractUnitAction*);
+    public slots:
+        void next() {
+            qDebug()<<"MainModel.next";
+            //Раскоментить следующию строчку когда танков будет адекватное количество а не 8 штук
+            if ((defenders.count() == 0) || (tanks.count() == 0 /*<= model_descrip.get_N_refusal()*/)) {
+                emit action(new EndWarAction());
+                return;
+            }
+            FireUnitAction* act = NULL;
+            if (!(tank_queue%3))    {
+                Unit* mainTank = tanks.dequeue();
+                Unit* victim   = defenders.dequeue();
+                tanks.push_back(mainTank);
+                succes = random()%5;
+                succes = !(succes);
+                act = new FireUnitAction(mainTank->id, mainTank->name,
+                                         victim->id, victim->name, succes);
+            }
+            else    {
+                Unit* attacker = defenders.dequeue();
+                Unit* victim   = tanks.dequeue();
+                defenders.push_back(attacker);
+                succes = random()%3;
+                succes = !(succes);
+                act = new FireUnitAction(attacker->id, attacker->name,
+                                         victim->id, victim->name, succes);
+
+            }
+            tank_queue++;
+            emit action(act);
+        }
 };
 
 #endif // FIGHTINGMODEL_H

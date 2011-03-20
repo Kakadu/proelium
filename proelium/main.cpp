@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     w.setWindowState(Qt::WindowMaximized);
     //GameMap m(9,8);
 
-    GameMap m(7,6);
+    GameMap m(11,7);
     m.init();
     QGraphicsScene* sc = w.getScene();
     MapDrawer drawer(sc,&m);
@@ -31,8 +31,9 @@ int main(int argc, char *argv[])
     drawer.placeArmies();
     drawer.repaint();
 
-    SimpleFightingModel2 model(&m);
-
+    ModelParam param;
+//    SimpleFightingModel model(&m);
+    MainFightingModel model(&m, &param);
 
     QObject::connect(&model,SIGNAL(action(AbstractUnitAction*)),
 		     &drawer,SLOT(applyAction(AbstractUnitAction*)) );

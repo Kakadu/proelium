@@ -33,6 +33,7 @@ HEADERS += mainwindow.h \
     fightingmodel.h \
     reshelpers/gametextureitem.h \
     reshelpers/container.h \
-    reshelpers/anigroup.h
+    reshelpers/anigroup.h \
+    GlobalConst.h
 FORMS += mainwindow.ui \
     ../dialog.ui

@@ -33,11 +33,11 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
 
 	UnitPack* tanks = new UnitPack;
 	ResLoader1::load1(tanks->attack,x,x,
-			  "./tank_att/TankAttackA_W.png",20,1,QColor(192,192,192) );
+			  "./tank_att/TankAttackA_E.png",20,1,QColor(192,192,192) );
 	ResLoader1::load1(tanks->move,x,x,
 			  "./tank_run/TankRun_SW.png",14,1,QColor(192,192,192) );
 	ResLoader1::load1(tanks->death,x,x,
-			  "./tank_death/TankDeath_W.png",15,1,QColor(192,192,192) );
+			  "./tank_death/TankDeath_E.png",15,1,QColor(192,192,192) );
 	int c=0;
 	foreach(const QPixmap p, tanks->move) {
 	    if (p.isNull()) {
@@ -52,9 +52,9 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
 
 	UnitPack* pturs = new UnitPack;
 	ResLoader1::load1(pturs->attack,x,x,
-			"./artillery/ArtilleryAttackA_N.png",12,1,QColor(192,192,192) );
+			"./artillery/ArtilleryAttackA_W.png",12,1,QColor(192,192,192) );
 	ResLoader1::load1(pturs->death,x,x,
-			"./artillery/ArtilleryDeath_N.png",12,1, QColor(192,192,192));
+			"./artillery/ArtilleryDeath_W.png",12,1, QColor(192,192,192));
 	//TODO: load new resources in future
 	pturs->normal = pturs->attack;
 	Sprites.insert(tr("ptur"),pturs);

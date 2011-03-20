@@ -165,6 +165,8 @@ void MapDrawer::placeArmies() {
 	//танки слева
 	Unit* unit = new Unit("tank",j);
 	_map->getSquare1(j,w-j)->addUnit(unit);
+        unit = new Unit ("tank", w+j+1);
+        _map->getSquare1(j,w-j+1)->addUnit(unit);
 	//гаубицы справа
 	unit = new Unit("ptur",1000+j);
 	_map->getSquare1(h+1+j,s-1-j)->addUnit(unit);

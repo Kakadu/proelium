@@ -168,6 +168,8 @@ class MainFightingModel: public QObject, protected FightingModel {
     Q_OBJECT
 private:
     int tank_queue;
+    int shot_order;
+    int possib;
     bool succes;
     QQueue<Unit*> tanks;
     QQueue<Unit*> defenders;
@@ -176,7 +178,9 @@ public:
     MainFightingModel(GameMap* m, ModelParam* current)   {
         this->_map = m;
         model_descrip = *current;
+        possib = 5;
         tank_queue = 0;
+        shot_order = 0;
         int s = m->width() + m->height() + 2;
         MapSquare* sd;
         for (int i = 0; i < s; ++i)
@@ -202,8 +206,44 @@ public:
                 emit action(new EndWarAction());
                 return;
             }
-            FireUnitAction* act = NULL;
-            if (!(tank_queue%3))    {
+//            FireUnitAction* act = NULL;
+              if (!(tank_queue%possib))    {
+                  if (shot_order<=5)       {
+                      possib=5;
+                  for (int shet=0; shet<tanks.count(); shet++)  {
+                Unit* mainTank = tanks.dequeue();
+                if (shot_order==1)   {
+                    int w  = _map->width();
+                    int h  = _map->height();
+                    for (int jr=0; jr<=w; ++jr) {
+                        Unit* unit = new Unit("tank",jr+w*2);
+                        _map->getSquare1(jr,w-jr)->addUnit(unit);
+                    }
+                }
+                int i,j;
+                MapSquare* initSq = _map->locateUnit(i,j,mainTank);
+//                qDebug()<<i<<"\t"<<j<<endl;
+                MoveUnitAction* act;
+                MapSquare* sq;
+                QPair<int,int> dd(0,0);
+
+                    dd = directions[1];
+                    sq = _map->getSquare1(i+dd.first,j+dd.second);
+//                qDebug()<<dd.first<<"\t"<<dd.second<<endl;
+
+                    act = new MoveUnitAction(i,j,i+dd.first,j+dd.second, mainTank);
+//                qDebug()<<"We are here"<<endl;
+                    initSq->removeUnit(mainTank);
+                    sq->addUnit(mainTank);
+//                qDebug()<<"We are here"<<endl;
+                tanks.push_back(mainTank);
+//                qDebug()<<"We are here"<<endl;
+                emit action(act);
+            }
+              shot_order++;
+          }   else {
+              possib=3;
+                FireUnitAction* act = NULL;
                 Unit* mainTank = tanks.dequeue();
                 Unit* victim   = defenders.dequeue();
                 tanks.push_back(mainTank);
@@ -213,8 +253,11 @@ public:
                                          victim->id, victim->name, succes);
                 if (!succes)
                     defenders.push_back(victim);
+                emit action(act);
             }
+                }
             else    {
+                FireUnitAction* act = NULL;
                 Unit* attacker = defenders.dequeue();
                 Unit* victim   = tanks.dequeue();
                 defenders.push_back(attacker);
@@ -224,10 +267,13 @@ public:
                                          victim->id, victim->name, succes);
                 if (!(succes))
                     tanks.push_back(victim);
+                emit action(act);   }
 
-            }
+
+
             tank_queue++;
-            emit action(act);
+
+            qDebug()<<"We are here"<<endl;
         }
 };
 

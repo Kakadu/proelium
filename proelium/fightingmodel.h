@@ -207,7 +207,7 @@ public:
                 return;
             }
 //            FireUnitAction* act = NULL;
-              if (!(tank_queue%possib))    {
+	    if (!(tank_queue%possib))    {
                   if (shot_order<=5)       {
                       possib=5;
                   for (int shet=0; shet<tanks.count(); shet++)  {

@@ -34,6 +34,11 @@ public:
     void paintField();
     void placeArmies();
 
+    virtual void visit(NewUnitsAppearedAction&) {
+	repaint();
+	endVisiting();
+    }
+
     virtual void visit(FireUnitAction& act) {
 	QString res = act.result ? "killed" : "fired";
 	qDebug() << act.attackerID << " " << res << " " << act.victimID;

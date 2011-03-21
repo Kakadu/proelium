@@ -82,7 +82,6 @@ QPoint MapDrawer::screenCoords(int x, int y) {
     throw "cant get screen coords";
 }
 
-
 /**
   Перерисовка юнитов
   */
@@ -192,7 +191,7 @@ void MapDrawer::paintField() {
 	    MapSquare* sq = _map->getSquare1(wc+i-j,j+i);
 	    if (sq != NULL)  {
 		QPixmap map = TerrainSprites.at(40);
-		GameTextureItem* item = new GameTextureItem( _scene,_imageWidth,_imageHeight);
+		GameTextureItem* item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
 		item->setPixmap(map);
 		QPoint loc = screenCoords(wc+i-j,j+i);
 		item->setOffset(loc.x(),loc.y());

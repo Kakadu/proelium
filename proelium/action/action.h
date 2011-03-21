@@ -7,6 +7,7 @@ class FireUnitAction;
 class MoveUnitAction;
 class NoAction;
 class EndWarAction;
+class NewUnitsAppearedAction;
 
 class UnitVisitor {
 public:
@@ -14,6 +15,7 @@ public:
     virtual void visit(MoveUnitAction&)=0;
     virtual void visit(EndWarAction&)=0;
     virtual void visit(NoAction&)=0;
+    virtual void visit(NewUnitsAppearedAction&)=0;
 };
 class AbstractUnitAction
 {
@@ -65,6 +67,14 @@ public:
 class EndWarAction : public AbstractUnitAction {
 public:
     EndWarAction() {}
+    virtual void accept(UnitVisitor &v) {
+	v.visit(*this);
+    }
+};
+
+class NewUnitsAppearedAction : public AbstractUnitAction {
+public:
+    NewUnitsAppearedAction() {}
     virtual void accept(UnitVisitor &v) {
 	v.visit(*this);
     }

@@ -35,7 +35,7 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
 	ResLoader1::load1(tanks->attack,x,x,
 			  "./tank_att/TankAttackA_E.png",20,1,QColor(192,192,192) );
 	ResLoader1::load1(tanks->move,x,x,
-			  "./tank_run/TankRun_SW.png",14,1,QColor(192,192,192) );
+			  "./tank_run/TankRun_E.png",14,1,QColor(192,192,192) );
 	ResLoader1::load1(tanks->death,x,x,
 			  "./tank_death/TankDeath_E.png",15,1,QColor(192,192,192) );
 	int c=0;

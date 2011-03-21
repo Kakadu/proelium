@@ -212,14 +212,14 @@ public:
                       possib=5;
                   for (int shet=0; shet<tanks.count(); shet++)  {
                 Unit* mainTank = tanks.dequeue();
-                if (shot_order==1)   {
+/*                if (shot_order==1)   {
                     int w  = _map->width();
                     int h  = _map->height();
                     for (int jr=0; jr<=w; ++jr) {
                         Unit* unit = new Unit("tank",jr+w*2);
                         _map->getSquare1(jr,w-jr)->addUnit(unit);
                     }
-                }
+                }*/
                 int i,j;
                 MapSquare* initSq = _map->locateUnit(i,j,mainTank);
 //                qDebug()<<i<<"\t"<<j<<endl;

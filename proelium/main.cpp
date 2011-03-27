@@ -12,6 +12,8 @@
 #include "fightingmodel.h"
 #include "reshelpers/rescontainer.h"
 #include <ctime>
+#include "beforeWar.h"
+#include "mainhelper.h"
 
 extern QMap<QString, SpritesPack*> Sprites;
 
@@ -19,30 +21,6 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     srand(time(NULL));
-    MainWindow w;
-    w.setWindowState(Qt::WindowMaximized);
-    //GameMap m(9,8);
-
-    GameMap m(11,7);
-    m.init();
-    QGraphicsScene* sc = w.getScene();
-    MapDrawer drawer(sc,&m);
-
-    drawer.paintField();
-    drawer.placeArmies();
-    drawer.repaint();
-
-    ModelParam param;
-//    SimpleFightingModel model(&m);
-    MainFightingModel model(&m, &param);
-
-    QObject::connect(&model,SIGNAL(action(AbstractUnitAction*)),
-		     &drawer,SLOT(applyAction(AbstractUnitAction*)) );
-
-    QObject::connect(&drawer, SIGNAL(continueModel()),
-		     &model, SLOT(next()) );
-
-    model.next();
-    w.show();
+    MainHelper m;
     return a.exec();
 }

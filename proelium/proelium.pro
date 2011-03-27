@@ -20,7 +20,9 @@ SOURCES += main.cpp \
     fightingmodel.cpp \
     reshelpers/gametextureitem.cpp \
     reshelpers/container.cpp \
-    reshelpers/anigroup.cpp
+    reshelpers/anigroup.cpp \
+    beforeWar.cpp \
+    mainhelper.cpp
 HEADERS += mainwindow.h \
     framecollection.h \
     unit.h \
@@ -34,6 +36,8 @@ HEADERS += mainwindow.h \
     reshelpers/gametextureitem.h \
     reshelpers/container.h \
     reshelpers/anigroup.h \
-    GlobalConst.h
+    GlobalConst.h \
+    beforeWar.h \
+    mainhelper.h
 FORMS += mainwindow.ui \
-    ../dialog.ui
+    beforeWar.ui

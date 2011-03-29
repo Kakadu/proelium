@@ -206,20 +206,35 @@ public:
                 emit action(new EndWarAction());
                 return;
             }
+            if (shot_order==2)  {
+                qDebug()<<"shot_order = 1"<<endl;
+                int w  = _map->width();
+                 Unit* unit = new Unit("tank",2+w*2);
+                 _map->getSquare1(0,w)->addUnit(unit);
+                 tanks.push_back(unit);
+                 emit (new NewUnitsAppearedAction());
+                 qDebug()<<"shot_order = 1"<<endl;
+                 shot_order++;
+        //       return;
+            }
 //            FireUnitAction* act = NULL;
 	    if (!(tank_queue%possib))    {
                   if (shot_order<=5)       {
                       possib=5;
                   for (int shet=0; shet<tanks.count(); shet++)  {
-                Unit* mainTank = tanks.dequeue();
-/*                if (shot_order==1)   {
+
+  /*              if (shot_order==1)   {
                     int w  = _map->width();
                     int h  = _map->height();
-                    for (int jr=0; jr<=w; ++jr) {
-                        Unit* unit = new Unit("tank",jr+w*2);
-                        _map->getSquare1(jr,w-jr)->addUnit(unit);
-                    }
+        //            for (int jr=0; jr<=w; ++jr) {
+                        Unit* unit = new Unit("tank",0+w*2);
+                        _map->getSquare1(0,w)->addUnit(unit);
+                        emit (new NewUnitsAppearedAction());
+                        shot_order++;
+                        return;
+         //           }
                 }*/
+                Unit* mainTank = tanks.dequeue();
                 int i,j;
                 MapSquare* initSq = _map->locateUnit(i,j,mainTank);
 //                qDebug()<<i<<"\t"<<j<<endl;

@@ -174,10 +174,11 @@ void MapDrawer::placeArmies() {
 
     for (int j=0; j<=w; ++j) {
         //танки слева
+//        Unit* unit;
         Unit* unit = new Unit("tank",j);
         _map->getSquare1(j,w-j)->addUnit(unit);
-//        unit = new Unit ("tank", w+j+1);
-//        _map->getSquare1(j,w-j+1)->addUnit(unit);
+        unit = new Unit ("tank", w+j+1);
+        _map->getSquare1(j,w-j+1)->addUnit(unit);
 	//гаубицы справа
 	unit = new Unit("ptur",1000+j);
 	_map->getSquare1(h+1+j,s-1-j)->addUnit(unit);
@@ -197,12 +198,17 @@ void MapDrawer::paintField() {
     TerrainPack* p = dynamic_cast<TerrainPack*>(sp);
     Images TerrainSprites = p->content;
 
+    QList <int> set_textures;
+    set_textures<<0<<1<<3<<4<<9<<10<<12<<13<<40<<39<<37<<36<<31<<30<<28<<27;
+    int len = set_textures.count();
+
     //зеленые квадраты
     for (int i=0; i<hc+2; ++i)
 	for (int j=0; j<wc+1; ++j) {
 	    MapSquare* sq = _map->getSquare1(wc+i-j,j+i);
+            sq->setTerrainSprite(set_textures.at(qrand()%len));
 	    if (sq != NULL)  {
-		QPixmap map = TerrainSprites.at(40);
+                QPixmap map = TerrainSprites.at(sq->terrainSprite());
 		GameTextureItem* item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
 		item->setPixmap(map);
 		QPoint loc = screenCoords(wc+i-j,j+i);
@@ -216,8 +222,9 @@ void MapDrawer::paintField() {
     for (int i=0; i<hc+1; ++i)
 	for (int j=0; j<wc+2; ++j) {
 	    MapSquare* sq = _map->getSquare1(wc+1+i-j,j+i);
+            sq->setTerrainSprite(set_textures.at(qrand()%len));
 	    if (sq!=NULL) {
-		QPixmap map = TerrainSprites.at(18);
+                QPixmap map = TerrainSprites.at(sq->terrainSprite());
 		GameTextureItem* item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
 		item->setPixmap(map);
 		QPoint loc = screenCoords(wc+1+i-j,j+i);

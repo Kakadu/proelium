@@ -235,11 +235,16 @@ public:
                 qDebug()<<"shot_order = 2"<<endl;
                 int w  = _map->width();
                 Unit* additional;
-                for (int i=0; i < w; i++)   {
-                 additional = new Unit("tank",i+w+qrand()%1000);
-                 _map->getSquare1(i,w-i)->addUnit(additional);
-                tanks.push_back(additional);
-                new_borns.append(additional);
+                for (int i=0; i <= w; i++)   {
+                    additional = new Unit("tank",i+w+qrand()%1000);
+                    _map->getSquare1(i,w-i)->addUnit(additional);
+                    tanks.push_back(additional);
+                    new_borns.append(additional);
+
+                    additional = new Unit("tank",i+w*2+qrand()%1000);
+                    _map->getSquare1(i,w+1-i)->addUnit(additional);
+                    tanks.push_back(additional);
+                    new_borns.append(additional);
                 }
                 qDebug()<<"shot_order = 2"<<endl;
                 shot_order++;
@@ -292,7 +297,7 @@ public:
                 Unit* mainTank = tanks.dequeue();
                 Unit* victim   = defenders.dequeue();
                 tanks.push_back(mainTank);
-                succes = random()%5;
+                succes = qrand()%5;
                 succes = !succes;
                 act = new FireUnitAction(mainTank->id, mainTank->name,
                                          victim->id, victim->name, succes);

@@ -30,12 +30,15 @@ signals:
 
 public slots:
     void showMainWindow() {
-        m = new GameMap(7,6);
+       param = new ModelParam;
+//       dialog->ui->surrenderSpin->value();
+//       dialog->ui->TDD1_radio->isChecked();
+
+        m = new GameMap(7,6); //11, 7
 	m->init();
 
 	QGraphicsScene* sc = w->getScene();
 	drawer  = new MapDrawer(sc,m);
-	param = new ModelParam;
 
 	drawer->paintField();
 	drawer->placeArmies();

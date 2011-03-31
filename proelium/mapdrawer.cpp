@@ -96,7 +96,7 @@ void MapDrawer::repaint() {
 		continue;
 	    QPoint terrLoc = screenCoords(wc+i-j,j+i);
 	    //TODO: итериться наверное не стоит, надо рисовать только верхний элемент
-	    foreach (const Unit* u, sq->units) {
+            foreach (Unit* u, sq->units) {
 		GameTextureItem* item;
 
 		if (unitGraphics.contains(u->id))
@@ -107,11 +107,23 @@ void MapDrawer::repaint() {
 		}
 		UnitPack* pack = dynamic_cast<UnitPack*>(Sprites.value(u->name));
 		if (pack!=NULL) {
-		    QPixmap norm = pack->attack.at(0);
-		    int w = norm.width(), h = norm.height();
-		    item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
-				    terrLoc.y() - h/2 + _imageHeight/2);
-		    item->setPixmap(norm);
+
+                    if (u->alive()) {
+                        QPixmap norm = pack->attack.at(0);
+                        item->setPixmap(norm);
+                        int w = norm.width(), h = norm.height();
+                        item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
+                                        terrLoc.y() - h/2 + _imageHeight/2);
+                    } else {
+                        int len = pack->death.count();
+                        QPixmap norm = pack->death.at(len-1);
+                        int w = norm.width(), h = norm.height();
+                        item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
+                                        terrLoc.y() - h/2 + _imageHeight/2);
+
+                        item->setPixmap(norm);
+
+                    }
 		}
 	    }
 	}
@@ -161,11 +173,11 @@ void MapDrawer::placeArmies() {
     */
 
     for (int j=0; j<=w; ++j) {
-	//танки слева
-	Unit* unit = new Unit("tank",j);
-	_map->getSquare1(j,w-j)->addUnit(unit);
-        unit = new Unit ("tank", w+j+1);
-        _map->getSquare1(j,w-j+1)->addUnit(unit);
+        //танки слева
+        Unit* unit = new Unit("tank",j);
+        _map->getSquare1(j,w-j)->addUnit(unit);
+//        unit = new Unit ("tank", w+j+1);
+//        _map->getSquare1(j,w-j+1)->addUnit(unit);
 	//гаубицы справа
 	unit = new Unit("ptur",1000+j);
 	_map->getSquare1(h+1+j,s-1-j)->addUnit(unit);

@@ -21,6 +21,7 @@ private:
     int _curframe,;
     int _allPath;
     int _nonEvaledPath;
+    bool is_alive;
 public:
     IDT id;
     QString name;
@@ -39,36 +40,17 @@ public:
 	Unit* a = new Unit(u.name, u.id);
 	return *a;
     }
+    bool alive (void) {return is_alive;}
+    void setAlive(bool b) {
+        is_alive = b;
+    }
 
     explicit Unit(QString _name, int _id, QObject* parent = NULL) : QObject(parent) {
 	name = _name;
 	id = _id;
-    }
-    /*
-    explicit Unit(Unit& u) {
-	name = u.name;
-	id = u.id;
-    }
-    */
-
-/*
-    void setAttackFrame(int n)  {
-	_curframe = n;
-	QPixmap* map = _attackFrames->getImage(n);
-	_view->setPixmap(*map);
-    }
-    int attackFrame() {
-	return _curframe;
+        is_alive = true;
     }
 
-    void animate(int) {
-	QPropertyAnimation *an1 = new QPropertyAnimation(this,"attackFrame");
-	an1->setEndValue(_attackFrames->count() -1);
-	an1->setStartValue(0);
-	an1->setDuration(2000);
-	an1->start();
-    }
-*/
 };
 
 #endif // UNIT_H

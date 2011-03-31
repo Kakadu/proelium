@@ -3,6 +3,6 @@
 GameTextureItem::GameTextureItem(QGraphicsScene* sc, int tsw, int tsh) :
     QGraphicsPixmapItem(NULL,sc), _terrSpriteWidth(tsw), _terrSpriteHeight(tsh)
 {
-    DURATION = 2000;
+    DURATION = 700;
     //aniGroup = new QParallelAnimationGroup(this);
 }

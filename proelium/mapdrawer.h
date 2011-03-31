@@ -88,7 +88,7 @@ public:
 	qDebug() << "War never ends.";
     }
     virtual void visit(NoAction&) {
-	emit continueModel();
+        wakeUpModel();
     }
 
 signals:

@@ -25,8 +25,11 @@ private:
     bool ended;
     QQueue<Unit*> tanks;
     QQueue<Unit*> defenders;
+    Unit* unit2add;
 public:
-    SimpleFightingModel(GameMap* m) {
+    SimpleFightingModel(GameMap* m, ModelParam *) {
+        unit2add=
+                NULL;
 	this->_map = m;
 	ended = false;
 	int s = m->width() + m->height() + 2;
@@ -46,7 +49,7 @@ public:
     }
 
 signals:
-    /**
+    /**7
       Вызывем этот сигнал, когда мы высчитали следующее действие. На этот сигнал
       подписывается отрисовщик.
       */
@@ -67,6 +70,12 @@ public slots:
 	    emit action(new EndWarAction());
 	    return;
 	}
+
+        if (unit2add!=NULL) {
+            unit2add=NULL;
+            emit action(new NewUnitsAppearedAction());
+            return;
+        }
 	Unit* mainTank = tanks.dequeue();
 
 	if (random()%4==0) {
@@ -75,6 +84,13 @@ public slots:
 	    tanks.push_back(mainTank);
 	    FireUnitAction* act = new FireUnitAction(mainTank->id, mainTank->name,
 						     victim->id, victim->name, true);
+            victim->setAlive(false);
+            int i,j;
+            _map->locateUnit(i,j,victim);
+
+            unit2add = new Unit ("tank", 7000+qrand()%100);
+            _map->getSquare1(i-4,j-4)->addUnit(unit2add);
+            tanks.push_back(unit2add);
 	    emit action(act);
 	} else {
 	    int i,j;
@@ -84,20 +100,22 @@ public slots:
 	    // TODO: надо нормально написать в каких направлениях юнит будет двигаться
 	    // к цели. думаю направлений будет всего три: Юг, Юго-Запад, и Юго-Восток.
 	    QPair<int,int> dd(0,0);
+            int d = 0;
 	    while (true) {
 //		int d = random()%3;
-                int d = 0;
+//                int d = 0;
                 dd = directions[d];
 		sq = _map->getSquare1(i+dd.first,j+dd.second);
 		if (sq!=NULL)
 		    break;
+                d++;
 	    }
 	    if (sq == NULL) {
 		throw "a very big problem in fighting model";
 	    } else {
 		act = new MoveUnitAction(i,j,i+dd.first,j+dd.second, mainTank);
-		initSq->removeUnit(mainTank);
-		sq->addUnit(mainTank);
+                initSq->removeUnit(mainTank);
+                sq->addUnit(mainTank);
 	    }
 	    tanks.push_back(mainTank);
 	    emit action(act);
@@ -173,6 +191,7 @@ private:
     bool succes;
     QQueue<Unit*> tanks;
     QQueue<Unit*> defenders;
+    QList <Unit*> new_borns;
     ModelParam model_descrip;
 public:
     MainFightingModel(GameMap* m, ModelParam* current)   {
@@ -181,6 +200,7 @@ public:
         possib = 5;
         tank_queue = 0;
         shot_order = 0;
+        new_borns.clear();
         int s = m->width() + m->height() + 2;
         MapSquare* sd;
         for (int i = 0; i < s; ++i)
@@ -206,17 +226,27 @@ public:
                 emit action(new EndWarAction());
                 return;
             }
-            if (shot_order==2)  {
-                qDebug()<<"shot_order = 1"<<endl;
-                int w  = _map->width();
-                 Unit* unit = new Unit("tank",2+w*2);
-                 _map->getSquare1(0,w)->addUnit(unit);
-                 tanks.push_back(unit);
-                 emit (new NewUnitsAppearedAction());
-                 qDebug()<<"shot_order = 1"<<endl;
-                 shot_order++;
-        //       return;
+            if (!new_borns.empty()) {
+                new_borns.clear();
+                emit action(new NewUnitsAppearedAction());
+                return;
             }
+            if (shot_order==1)  {
+                qDebug()<<"shot_order = 2"<<endl;
+                int w  = _map->width();
+                Unit* additional;
+                for (int i=0; i < w; i++)   {
+                 additional = new Unit("tank",i+w+qrand()%1000);
+                 _map->getSquare1(i,w-i)->addUnit(additional);
+                tanks.push_back(additional);
+                new_borns.append(additional);
+                }
+                qDebug()<<"shot_order = 2"<<endl;
+                shot_order++;
+                emit action (new NoAction());
+               return;
+            }
+            else {
 //            FireUnitAction* act = NULL;
 	    if (!(tank_queue%possib))    {
                   if (shot_order<=5)       {
@@ -290,6 +320,7 @@ public:
 
             qDebug()<<"We are here"<<endl;
         }
+     }
 };
 
 #endif // FIGHTINGMODEL_H

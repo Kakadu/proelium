@@ -30,7 +30,7 @@ signals:
 
 public slots:
     void showMainWindow() {
-	m = new GameMap(11,7);
+        m = new GameMap(7,6);
 	m->init();
 
 	QGraphicsScene* sc = w->getScene();
@@ -41,7 +41,7 @@ public slots:
 	drawer->placeArmies();
 	drawer->repaint();
 
-	model = new MainFightingModel(m, param);
+        model = new MainFightingModel(m, param);
 	w->show();
 	QObject::connect(model,SIGNAL(action(AbstractUnitAction*)),
 			 drawer,SLOT(applyAction(AbstractUnitAction*)) );

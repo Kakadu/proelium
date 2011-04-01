@@ -171,20 +171,9 @@ void MapDrawer::placeArmies() {
     int w  = _map->width();
     int h = _map->height();
     const int s = w+h+2;
-/*
-    for (int j=0; j<=h; ++j) {
-	    //танки сверху
-	    Unit* unit = new Unit("tank",j);
-	   _map->getSquare1(w+1+j,j)->addUnit(unit);
-	   //гаубицы снизу
-	   unit = new Unit("ptur",1000+j);
-	   _map->getSquare1(j,w+1+j)->addUnit(unit);
-    }
-    */
 
     for (int j=0; j<=w; ++j) {
         //танки слева
-//        Unit* unit;
         Unit* unit = new Unit("tank",j);
         _map->getSquare1(j,w-j)->addUnit(unit);
         unit = new Unit ("tank", w+j+1);
@@ -200,7 +189,7 @@ void MapDrawer::placeArmies() {
 void MapDrawer::paintField() {
     int hc = _map->height(), wc = _map->width(),
 	h = _imageHeight, w = _imageWidth,
-	left=5, top=5;
+	left=5, top=5, s = hc+wc+2;
 
     int k=0;
     SpritesPack* sp = Sprites["main_terrain"];
@@ -212,11 +201,67 @@ void MapDrawer::paintField() {
     set_textures<<0<<1<<3<<4<<9<<10<<12<<13<<40<<39<<37<<36<<31<<30<<28<<27;
     int len = set_textures.count();
 
-    //зеленые квадраты
+    for (int i=0; i<s; ++i)
+	for (int j=0; j<s; ++j) {
+	    MapSquare* sq = _map->getSquare1(i,j);
+	    if (sq!=NULL)
+		sq->setTerrainSprite(40);
+    }
+    MapSquare* sq;
+    // правый ряд
+    for (int i=0; i<=wc; ++i) {
+	int x = s-i-1, y = s-wc+i-1;
+	sq = _map->getSquare1(x,y);
+	if (sq!=NULL)
+	    sq->setTerrainSprite(27);
+    }
+    // правый внутренний ряд
+    for (int i=0; i<=wc; ++i) {
+	int x = s-i-1, y = s-wc+i-2;
+	sq = _map->getSquare1(x,y);
+	if (sq!=NULL)
+	    sq->setTerrainSprite(39);
+    }
+    // нижний внешний ряд
+    for (int i=0; i<=hc; ++i) {
+	sq = _map->getSquare1(i,s-hc+i-1);
+	if (sq!=NULL)
+	    sq->setTerrainSprite(9);
+    }
+    // нижний внутренний
+    for (int i=0; i<hc; ++i) {
+	sq = _map->getSquare1(i+1,s-hc+i-1);
+	if (sq!=NULL)
+	    sq->setTerrainSprite(37);
+    }
+    // слева
+    for (int i=0; i<=wc; ++i) {
+	sq = _map->getSquare1(i,hc-i+1);
+	if (sq!=NULL)
+	    sq->setTerrainSprite(1);
+    }
+    // слева 2й ряд
+    for (int i=1; i<=wc; ++i) {
+	sq = _map->getSquare1(i,hc-i+2);
+	if (sq!=NULL)
+	    sq->setTerrainSprite(13);
+    }
+    // сверху
+    for (int i=0; i<=hc; ++i) {
+	sq = _map->getSquare1(s-i-1,wc-i-1);
+	if (sq!=NULL)
+	    sq->setTerrainSprite(3);
+    }
+    // сверху второй ряд
+    for (int i=0; i<hc; ++i) {
+	sq = _map->getSquare1(s-i-2,wc-i-1);
+	if (sq!=NULL)
+	    sq->setTerrainSprite(31);
+    }
+
     for (int i=0; i<hc+2; ++i)
 	for (int j=0; j<wc+1; ++j) {
-	    MapSquare* sq = _map->getSquare1(wc+i-j,j+i);
-            sq->setTerrainSprite(set_textures.at(qrand()%len));
+	    MapSquare* sq = _map->getSquare1(wc+i-j,j+i);            
 	    if (sq != NULL)  {
                 QPixmap map = TerrainSprites.at(sq->terrainSprite());
 		GameTextureItem* item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
@@ -227,12 +272,11 @@ void MapDrawer::paintField() {
 	    }
     }
 
-    //large lines желтые квадраты
+    //large lines
     left += w/2; top -= h/2;
     for (int i=0; i<hc+1; ++i)
 	for (int j=0; j<wc+2; ++j) {
 	    MapSquare* sq = _map->getSquare1(wc+1+i-j,j+i);
-            sq->setTerrainSprite(set_textures.at(qrand()%len));
 	    if (sq!=NULL) {
                 QPixmap map = TerrainSprites.at(sq->terrainSprite());
 		GameTextureItem* item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
@@ -243,4 +287,3 @@ void MapDrawer::paintField() {
 	    }
     }
 }
-

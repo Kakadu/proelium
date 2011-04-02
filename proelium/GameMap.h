@@ -45,6 +45,27 @@ public:
     int nextId() {
         return _lastId++;
     }
+    /** get string number */
+    inline int getStrN(void) {
+        double w = this->width();
+        return 2*w+3;
+    }
+
+    inline int getStrM(int M) {
+        return (M+1)/2;
+    }
+
+    /** get number of 1st column  */
+    inline int get1stColumn(int N) {
+        return _width +1 - (N+1)/2;
+    }
+
+    inline void getCoords(int& i, int& j, int N, int x) {
+        int s = getStrM(N);
+        int k = get1stColumn(N);
+        i = s+x;
+        j  = k+x;
+    }
 
 signals:
     void unitRemoved(int);

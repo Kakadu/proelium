@@ -69,3 +69,4 @@ MapSquare* GameMap::getSquare1(int i,int j) {
 	return NULL;
     return _field[i][j];
 }
+

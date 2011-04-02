@@ -95,7 +95,7 @@ QPoint MapDrawer::screenCoords(int x, int y) {
 /**
   Перерисовка юнитов
   */
-void MapDrawer::repaint() {
+void MapDrawer::repaint()  {
     int hc = _map->height(), wc = _map->width();
     int leftOffset = LEFT_OFFSET, topOffset=TOP_OFFSET;
 
@@ -216,6 +216,21 @@ void MapDrawer::paintField() {
 		sq->setTerrainSprite(40);
     }
     MapSquare* sq;
+
+    int i_trnsl, j_trnsl;
+
+    qDebug()<<"_map->getStrN() \t"<<_map->getStrN()<<endl;
+
+    _map->getCoords(i_trnsl, j_trnsl, 1,1);
+
+    sq = _map->getSquare1(i_trnsl, j_trnsl);
+    sq->setTerrainSprite(56);
+
+    _map->getCoords(i_trnsl, j_trnsl, 0,2);
+
+    sq = _map->getSquare1(i_trnsl, j_trnsl);
+    sq->setTerrainSprite(56);
+
     /*
     // правый ряд
     for (int i=0; i<=wc; ++i) {

@@ -191,6 +191,7 @@ private:
     bool succes;
     QQueue<Unit*> tanks;
     QQueue<Unit*> defenders;
+    QQueue<Unit*> pturs;
     QList <Unit*> new_borns;
     ModelParam model_descrip;
 public:
@@ -226,12 +227,14 @@ public:
                 emit action(new EndWarAction());
                 return;
             }
+
             if (!new_borns.empty()) {
                 new_borns.clear();
                 emit action(new NewUnitsAppearedAction());
                 return;
             }
-            if (shot_order==1)  {
+
+            if (shot_order==2)  {
                 qDebug()<<"shot_order = 2"<<endl;
                 int w  = _map->width();
                 Unit* additional;

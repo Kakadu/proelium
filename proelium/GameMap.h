@@ -11,7 +11,7 @@ private:
     int _width, _height;
     MapSquare*** _field;
     inline int s() { return 2+_width+_height; }
-
+    int _lastId;
 public:
     bool** field_mask;
     explicit GameMap(int,int,QObject *parent = 0);
@@ -41,6 +41,9 @@ public:
 			return u;
 	}
 	return NULL;
+    }
+    int nextId() {
+        return _lastId++;
     }
 
 signals:

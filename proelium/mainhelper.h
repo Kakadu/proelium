@@ -8,6 +8,7 @@
 #include "mapdrawer.h"
 #include "GlobalConst.h"
 #include "fightingmodel.h"
+#include "other_fighting_models.h"
 
 class MainHelper : public QObject
 {
@@ -23,7 +24,7 @@ public:
     BeforeWar* dialog;
     MainWindow* w;
     MapDrawer* drawer;
-    MainFightingModel* model;
+    ComplexFightingModel* model;
     ModelParam* param;
     GameMap *m;
 signals:
@@ -34,7 +35,7 @@ public slots:
 //       dialog->ui->surrenderSpin->value();
 //       dialog->ui->TDD1_radio->isChecked();
 
-        m = new GameMap(7,6); //11, 7
+        m = new GameMap(11,7); //11, 7
 	m->init();
 
 	QGraphicsScene* sc = w->getScene();
@@ -44,7 +45,7 @@ public slots:
 	drawer->placeArmies();
 	drawer->repaint();
 
-        model = new MainFightingModel(m, param);
+        model = new ComplexFightingModel(m, param);
 	w->show();
 	QObject::connect(model,SIGNAL(action(AbstractUnitAction*)),
 			 drawer,SLOT(applyAction(AbstractUnitAction*)) );

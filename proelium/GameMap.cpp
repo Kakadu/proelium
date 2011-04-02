@@ -7,6 +7,7 @@
 using namespace std;
 
 GameMap::GameMap(int w, int h,QObject *parent) : QObject(parent) {
+    _lastId = 0;
     _width=w;
     _height=h;
     int s  = w+h+2;

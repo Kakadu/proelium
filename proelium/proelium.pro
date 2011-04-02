@@ -1,7 +1,8 @@
 # -------------------------------------------------
 # Project created by QtCreator 2011-01-03T15:12:49
 # -------------------------------------------------
-QT += opengl qt3support
+QT += opengl \
+    qt3support
 TARGET = proelium
 TEMPLATE = app
 SOURCES += main.cpp \
@@ -35,6 +36,7 @@ HEADERS += mainwindow.h \
     reshelpers/anigroup.h \
     GlobalConst.h \
     beforeWar.h \
-    mainhelper.h
+    mainhelper.h \
+    other_fighting_models.h
 FORMS += mainwindow.ui \
     beforeWar.ui

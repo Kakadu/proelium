@@ -116,15 +116,15 @@ void MapDrawer::repaint() {
 		    unitGraphics.insert(u->id,item);
 		}
 		UnitPack* pack = dynamic_cast<UnitPack*>(Sprites.value(u->name));
-		if (pack!=NULL) {
-
-                    if (u->alive()) {
+                if (pack==NULL)
+                    continue;
+                if (u->alive()) {
                         QPixmap norm = pack->attack.at(0);
                         item->setPixmap(norm);
                         int w = norm.width(), h = norm.height();
                         item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
                                         terrLoc.y() - h/2 + _imageHeight/2);
-                    } else {
+                } else {
                         int len = pack->death.count();
                         QPixmap norm = pack->death.at(len-1);
                         int w = norm.width(), h = norm.height();
@@ -132,9 +132,7 @@ void MapDrawer::repaint() {
                                         terrLoc.y() - h/2 + _imageHeight/2);
 
                         item->setPixmap(norm);
-
-                    }
-		}
+                }
 	    }
 	}
     leftOffset += _imageWidth/2;
@@ -146,7 +144,7 @@ void MapDrawer::repaint() {
 	    if (sq==NULL)
 		continue;
 	    QPoint terrLoc = screenCoords(wc+i-j+1,j+i);
-	    foreach (const Unit* u, sq->units) {
+            foreach (Unit* u, sq->units) {
 		GameTextureItem* item;
 
 		if (unitGraphics.contains(u->id))
@@ -156,14 +154,24 @@ void MapDrawer::repaint() {
 		    unitGraphics.insert(u->id,item);
 		}
 		UnitPack* pack = dynamic_cast<UnitPack*>(Sprites[u->name]);
-		if (pack!=NULL) {
-		    QPixmap norm = pack->attack.at(0);
-		    int w = norm.width(), h = norm.height();
-		    item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
-				    terrLoc.y() - h/2 + _imageHeight/2);
-		    item->setPixmap(norm);
-		}
-	    }
+                if (pack==NULL)
+                    continue;
+                if (u->alive()) {
+                        QPixmap norm = pack->attack.at(0);
+                        item->setPixmap(norm);
+                        int w = norm.width(), h = norm.height();
+                        item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
+                                        terrLoc.y() - h/2 + _imageHeight/2);
+                } else {
+                        int len = pack->death.count();
+                        QPixmap norm = pack->death.at(len-1);
+                        int w = norm.width(), h = norm.height();
+                        item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
+                                        terrLoc.y() - h/2 + _imageHeight/2);
+
+                        item->setPixmap(norm);
+                }
+            }
 	}
 }
 void MapDrawer::placeArmies() {
@@ -174,12 +182,12 @@ void MapDrawer::placeArmies() {
 
     for (int j=0; j<=w; ++j) {
         //танки слева
-        Unit* unit = new Unit("tank",j);
+        Unit* unit = new Unit("tank", _map->nextId());
         _map->getSquare1(j,w-j)->addUnit(unit);
-        unit = new Unit ("tank", w+j+1);
+        unit = new Unit ("tank", _map->nextId());
         _map->getSquare1(j,w-j+1)->addUnit(unit);
 	//гаубицы справа
-	unit = new Unit("ptur",1000+j);
+        unit = new Unit("d30",_map->nextId());
 	_map->getSquare1(h+1+j,s-1-j)->addUnit(unit);
     }
 }
@@ -208,6 +216,7 @@ void MapDrawer::paintField() {
 		sq->setTerrainSprite(40);
     }
     MapSquare* sq;
+    /*
     // правый ряд
     for (int i=0; i<=wc; ++i) {
 	int x = s-i-1, y = s-wc+i-1;
@@ -235,7 +244,7 @@ void MapDrawer::paintField() {
 	    sq->setTerrainSprite(37);
     }
     // слева
-    for (int i=0; i<=wc; ++i) {
+    for (int i=1; i<wc; ++i) {
 	sq = _map->getSquare1(i,hc-i+1);
 	if (sq!=NULL)
 	    sq->setTerrainSprite(1);
@@ -249,6 +258,7 @@ void MapDrawer::paintField() {
     // сверху
     for (int i=0; i<=hc; ++i) {
 	sq = _map->getSquare1(s-i-1,wc-i-1);
+        int t = sq->terrainSprite();
 	if (sq!=NULL)
 	    sq->setTerrainSprite(3);
     }
@@ -258,7 +268,7 @@ void MapDrawer::paintField() {
 	if (sq!=NULL)
 	    sq->setTerrainSprite(31);
     }
-
+*/
     for (int i=0; i<hc+2; ++i)
 	for (int j=0; j<wc+1; ++j) {
 	    MapSquare* sq = _map->getSquare1(wc+i-j,j+i);            

@@ -35,11 +35,13 @@ public:
     void placeArmies();
 
     virtual void visit(NewUnitsAppearedAction&) {
+        qDebug() << "NewUnitsAppearedAction";
 	repaint();
 	endVisiting();
     }
 
     virtual void visit(FireUnitAction& act) {
+          qDebug() << "FireUnitAction";
 	QString res = act.result ? "killed" : "fired";
 	qDebug() << act.attackerID << " " << res << " " << act.victimID;
 
@@ -66,6 +68,7 @@ public:
     }
 
     virtual void visit(MoveUnitAction& act) {
+        qDebug() << "MoveUnitAction";
 	/*
 	  Тут логика сейчас представляется мне такой. Танк двигает из одной
 	  клетки во вторую. Мы двигаем спрайт по прямой, одновременно сменяя кадры.
@@ -88,6 +91,7 @@ public:
 	qDebug() << "War never ends.";
     }
     virtual void visit(NoAction&) {
+        qDebug() << "NoAction";
         wakeUpModel();
     }
 

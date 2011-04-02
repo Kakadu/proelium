@@ -1,7 +1,7 @@
 #ifndef GLOBALCONST_H
 #define GLOBALCONST_H
 class ModelParam {
-private:
+public:
     int N_tanks;    // Всего танков
     int N_killed_by_10th_pturs;    // Убито танков 10 мсб ПТУРов
     int N_killed_by_12th_pturs;     // Убито танков 12 мсб ПТУРов
@@ -9,6 +9,15 @@ private:
     int N_refusal; // отказываются ли танки
     int tanks_direction; // куда идут танки танки
     int ptur_position; // где стоят ПТУРы
+
+    int TON_type;
+    bool tankSurrender;
+    int tankSurrenderAt;
+    int tankPlatoonCount;
+    int pturPlatoonCount;
+    int d30PlatoonCount;
+
+
 public:
     ModelParam(){
       N_tanks = 54;

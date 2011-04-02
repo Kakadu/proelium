@@ -13,7 +13,7 @@ class BeforeWar : public QDialog {
 public:
     BeforeWar(QWidget *parent = 0);
     ~BeforeWar();
-
+    Ui::BeforeWar *getUI() { return ui; }
 protected:
     void changeEvent(QEvent *e);
 

@@ -9,6 +9,7 @@
 #include "GlobalConst.h"
 #include "fightingmodel.h"
 #include "other_fighting_models.h"
+#include "beforeWar.h"
 
 class MainHelper : public QObject
 {
@@ -16,9 +17,7 @@ Q_OBJECT
 public:
     explicit MainHelper(QObject *parent = 0);
     ~MainHelper() {
-	//delete m;
-	//delete drawer;
-	//delete param;
+
     }
 
     BeforeWar* dialog;
@@ -31,11 +30,24 @@ signals:
 
 public slots:
     void showMainWindow() {
-       param = new ModelParam;
-//       dialog->ui->surrenderSpin->value();
-//       dialog->ui->TDD1_radio->isChecked();
+	param = new ModelParam;
 
-        m = new GameMap(11,7); //11, 7
+	Ui::BeforeWar  *ui = dialog->getUI();
+	param->d30PlatoonCount = ui->d30Count->value();
+	param->tankPlatoonCount = ui->tanksCount->value();
+	param->pturPlatoonCount = ui->pturCount->value();
+
+	param->tankSurrender = ! ui->NeverSurrenderRadio->isChecked();
+	param->tankSurrenderAt = ui->surrenderSpin->value();
+
+	if (ui->TDD1_radio->isChecked())
+	    param->TON_type = 0;
+	else if (ui->TDD2_radio->isChecked())
+	    param->TON_type = 1;
+	else
+	    param->TON_type = 2;
+
+	m = new GameMap(11,7);
 	m->init();
 
 	QGraphicsScene* sc = w->getScene();

@@ -61,6 +61,7 @@ public:
                 emit action(new NewUnitsAppearedAction());
                 return;
             }
+
             if (shot_order==0)  {
 
                 Unit* additional;

@@ -7,8 +7,7 @@ TARGET = proelium
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
-    framecollection.cpp \
-    unit.cpp \
+    framecollection.cpp \    
     GameMap.cpp \
     mapsquare.cpp \
     reshelpers/resloader1.cpp \

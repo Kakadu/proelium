@@ -47,7 +47,7 @@ public slots:
 	else
 	    param->TON_type = 2;
 
-	m = new GameMap(11,7);
+	m = new GameMap(11,11);
 	m->init();
 
 	QGraphicsScene* sc = w->getScene();

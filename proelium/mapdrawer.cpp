@@ -217,6 +217,7 @@ void MapDrawer::paintField() {
     }
     MapSquare* sq;
 
+    /*
     int i_trnsl, j_trnsl;
 
     qDebug()<<"_map->getStrN() \t"<<_map->getStrN()<<endl;
@@ -226,69 +227,80 @@ void MapDrawer::paintField() {
     sq = _map->getSquare1(i_trnsl, j_trnsl);
     sq->setTerrainSprite(56);
 
-    _map->getCoords(i_trnsl, j_trnsl, 0,2);
+    _map->getCoords(i_trnsl, j_trnsl, 0,1);
 
     sq = _map->getSquare1(i_trnsl, j_trnsl);
-    sq->setTerrainSprite(56);
+    sq->setTerrainSprite(56); */
 
-    /*
+
     // правый ряд
-    for (int i=0; i<=wc; ++i) {
-	int x = s-i-1, y = s-wc+i-1;
-	sq = _map->getSquare1(x,y);
+    for (int j=0; j<=wc; ++j) {
+	int i=hc+1;
+	sq = _map->getSquare1(wc+i-j,i+j);
 	if (sq!=NULL)
 	    sq->setTerrainSprite(27);
     }
     // правый внутренний ряд
-    for (int i=0; i<=wc; ++i) {
-	int x = s-i-1, y = s-wc+i-2;
-	sq = _map->getSquare1(x,y);
+    for (int j=1; j<=wc; ++j) {
+	int i=hc;
+	sq = _map->getSquare1(wc+1+i-j,i+j);
 	if (sq!=NULL)
 	    sq->setTerrainSprite(39);
     }
-    // нижний внешний ряд
-    for (int i=0; i<=hc; ++i) {
-	sq = _map->getSquare1(i,s-hc+i-1);
-	if (sq!=NULL)
-	    sq->setTerrainSprite(9);
-    }
-    // нижний внутренний
-    for (int i=0; i<hc; ++i) {
-	sq = _map->getSquare1(i+1,s-hc+i-1);
-	if (sq!=NULL)
-	    sq->setTerrainSprite(37);
-    }
+
     // слева
-    for (int i=1; i<wc; ++i) {
-	sq = _map->getSquare1(i,hc-i+1);
+    for (int j=0; j<=wc; ++j) {
+	int i=0;
+	sq = _map->getSquare1(wc+i-j,i+j);
 	if (sq!=NULL)
 	    sq->setTerrainSprite(1);
     }
     // слева 2й ряд
-    for (int i=1; i<=wc; ++i) {
-	sq = _map->getSquare1(i,hc-i+2);
+    for (int j=1; j<=wc; ++j) {
+	int i=0;
+	sq = _map->getSquare1(wc+1+i-j,i+j);
 	if (sq!=NULL)
 	    sq->setTerrainSprite(13);
     }
+
     // сверху
     for (int i=0; i<=hc; ++i) {
-	sq = _map->getSquare1(s-i-1,wc-i-1);
-        int t = sq->terrainSprite();
+	int j=0;
+	sq = _map->getSquare1(wc+1+i,j+i);
 	if (sq!=NULL)
 	    sq->setTerrainSprite(3);
     }
+
     // сверху второй ряд
-    for (int i=0; i<hc; ++i) {
-	sq = _map->getSquare1(s-i-2,wc-i-1);
+    for (int i=1; i<=hc; ++i) {
+	int j=0;
+	sq = _map->getSquare1(wc+i,j+i);
 	if (sq!=NULL)
 	    sq->setTerrainSprite(31);
     }
-*/
+
+    // нижний внешний ряд
+    for (int i=0; i<=hc; ++i) {
+	int j=wc+1;
+	sq = _map->getSquare1(i,j+i);
+	if (sq!=NULL)
+	    sq->setTerrainSprite(9);
+    }
+
+    // нижний внутренний
+    for (int i=0; i<hc; ++i) {
+	int j=wc+1;
+	sq = _map->getSquare1(i+1,j+i);
+	if (sq!=NULL)
+	    sq->setTerrainSprite(37);
+    }
+
     for (int i=0; i<hc+2; ++i)
 	for (int j=0; j<wc+1; ++j) {
 	    MapSquare* sq = _map->getSquare1(wc+i-j,j+i);            
 	    if (sq != NULL)  {
-                QPixmap map = TerrainSprites.at(sq->terrainSprite());
+		QPixmap map = TerrainSprites.at(sq->terrainSprite());
+//		QPixmap map = TerrainSprites.at(40);
 		GameTextureItem* item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
 		item->setPixmap(map);
 		QPoint loc = screenCoords(wc+i-j,j+i);
@@ -303,7 +315,9 @@ void MapDrawer::paintField() {
 	for (int j=0; j<wc+2; ++j) {
 	    MapSquare* sq = _map->getSquare1(wc+1+i-j,j+i);
 	    if (sq!=NULL) {
-                QPixmap map = TerrainSprites.at(sq->terrainSprite());
+		QPixmap map = TerrainSprites.at(sq->terrainSprite());
+//		QPixmap map = TerrainSprites.at(8);
+
 		GameTextureItem* item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
 		item->setPixmap(map);
 		QPoint loc = screenCoords(wc+1+i-j,j+i);

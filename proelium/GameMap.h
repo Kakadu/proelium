@@ -63,7 +63,7 @@ public:
     inline void getCoords(int& i, int& j, int N, int x) {
         int s = getStrM(N);
         int k = get1stColumn(N);
-        i = s+x;
+	i = x+s;
         j  = k+x;
     }
 

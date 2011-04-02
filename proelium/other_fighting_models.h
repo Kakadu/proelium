@@ -52,7 +52,7 @@ public:
             qDebug()<<"ComplexFightingModel.next";
             //Раскоментить следующию строчку когда танков будет адекватное количество а не 8 штук
             if ((defenders.count() == 0) || (tanks.count() == 0 /*<= model_descrip.get_N_refusal()*/)) {
-                emit action(new EndWarAction());
+		emit action(new EndWarAction("this is the end."));
                 return;
             }
 

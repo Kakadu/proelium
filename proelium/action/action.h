@@ -66,7 +66,8 @@ public:
 
 class EndWarAction : public AbstractUnitAction {
 public:
-    EndWarAction() {}
+    QString message;
+    EndWarAction(QString msg) : message(msg) {}
     virtual void accept(UnitVisitor &v) {
 	v.visit(*this);
     }

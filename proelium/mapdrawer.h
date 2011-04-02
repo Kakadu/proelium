@@ -9,6 +9,7 @@
 #include <QMap>
 #include <QAnimationGroup>
 #include <QPoint>
+#include <QMessageBox>
 #include "reshelpers/rescontainer.h"
 #include "action/action.h"
 #include "reshelpers/gametextureitem.h"
@@ -87,7 +88,12 @@ public:
 	    endVisiting();
 	}
     }
-    virtual void visit(EndWarAction&) {
+
+    virtual void visit(EndWarAction& act) {
+	QMessageBox msg;
+	msg.setText(act.message);
+
+	msg.exec();
 	qDebug() << "War never ends.";
     }
     virtual void visit(NoAction&) {

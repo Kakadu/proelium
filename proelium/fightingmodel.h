@@ -78,7 +78,7 @@ public slots:
         }
 	Unit* mainTank = tanks.dequeue();
 
-	if (random()%4==0) {
+        if (qrand()%4==0) {
 	    // tank fires at the random unit
 	    Unit* victim   = defenders.dequeue();
 	    tanks.push_back(mainTank);
@@ -328,7 +328,7 @@ public:
                 Unit* attacker = defenders.dequeue();
                 Unit* victim   = tanks.dequeue();
                 defenders.push_back(attacker);
-                succes = random()%4;
+                succes = qrand()%4;
                 succes = !succes;
                 act = new FireUnitAction(attacker->id, attacker->name,
                                          victim->id, victim->name, succes);

@@ -34,20 +34,20 @@
 \renewcommand\maketitle{\begin{titlepage}%
   \begin{center}
     {\Large \@university \\ \@facility \\}
-    \vskip 2em%
-    {\large \@chair \\}
+    \vskip 5em%
+%     {\large \@chair \\}
     \vskip 3em%
     {\Huge \@title \\}
     \vskip 2em%
-    {\large Дипломная работа \@position\ \@group\ группы\\}
+    {\large Курсовая работа \@position\ \@group\ взвода\\}
     {\Large\it\@author\\}
     \vskip 3em%
-    {\normalsize
-    \begin{tabular}{l p{0.1cm} c p{0.1cm} l}
-    Научный руководитель && .................. && \@leaderPosition\ \@leader \\
-    && /подпись/ && \\
-    \end{tabular}
-    }
+%     {\normalsize
+%     \begin{tabular}{l p{0.1cm} c p{0.1cm} l}
+%     Научный руководитель && .................. && \@leaderPosition\ \@leader \\
+%     && /подпись/ && \\
+%     \end{tabular}
+%     }
     \vskip 1em%
     {\large \@city\\ \@yr}%
   \end{center}\par

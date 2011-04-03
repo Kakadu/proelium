@@ -27,18 +27,18 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
 	int x;
 	TerrainPack *p = new TerrainPack;
 	ResLoader1::load1(p->content,_imageHeight,_imageWidth,
-			  "main_terrain.png",9,9,grayColor);
+                          ":/main_terrain.png",9,9,grayColor);
 	Sprites.insert(tr("main_terrain"),p);
 	_imageHeight = p->content.at(0).height();
 	_imageWidth =  p->content.at(0).width();
 
 	UnitPack* tanks = new UnitPack;
 	ResLoader1::load1(tanks->attack,x,x,
-			  "./tank_att/TankAttackA_E.png",20,1,QColor(192,192,192) );
+                          ":/tank_att/TankAttackA_E.png",20,1,QColor(192,192,192) );
 	ResLoader1::load1(tanks->move,x,x,
-			  "./tank_run/TankRun_E.png",14,1,QColor(192,192,192) );
+                          ":/tank_run/TankRun_E.png",14,1,QColor(192,192,192) );
 	ResLoader1::load1(tanks->death,x,x,
-			  "./tank_death/TankDeath_E.png",15,1,QColor(192,192,192) );
+                          ":/tank_death/TankDeath_E.png",15,1,QColor(192,192,192) );
 	tanks->normal = tanks->attack;
 	Sprites.insert(tr("tank"),tanks);
 	/*int c=0;
@@ -52,9 +52,9 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
 	//TODO: load new resources in future
 	UnitPack* d30 = new UnitPack;
 	ResLoader1::load1(d30->attack,x,x,
-			"./artillery/ArtilleryAttackA_W.png",12,1,QColor(192,192,192) );
+                        ":/artillery/ArtilleryAttackA_W.png",12,1,QColor(192,192,192) );
 	ResLoader1::load1(d30->death,x,x,
-			"./artillery/ArtilleryDeath_W.png",12,1, QColor(192,192,192));
+                        ":/artillery/ArtilleryDeath_W.png",12,1, QColor(192,192,192));
 
 	d30->normal = d30->attack;
 	Sprites.insert(tr("d30"),d30);
@@ -62,9 +62,9 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
 	//TODO: load new resources in future
 	UnitPack* pturs = new UnitPack;
 	ResLoader1::load1(pturs->attack,x,x,
-			"./ptur/TOW_Infantry_Attack_W.png",15,1,QColor(192,192,192) );
+                        ":/ptur/TOW_Infantry_Attack_W.png",15,1,QColor(192,192,192) );
 	ResLoader1::load1(pturs->death,x,x,
-			"./ptur/TOW_Infantry_Death_W.png",15,1, QColor(192,192,192));
+                        ":/ptur/TOW_Infantry_Death_W.png",15,1, QColor(192,192,192));
 	pturs->normal = pturs->attack;
 	Sprites.insert(tr("ptur"),pturs);
 

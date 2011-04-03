@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>tank_run/TankRun_E.png</file>
+        <file>ptur/TOW_Infantry_Death_W.png</file>
+        <file>ptur/TOW_Infantry_Attack_W.png</file>
+        <file>artillery/ArtilleryDeath_W.png</file>
+        <file>artillery/ArtilleryAttackA_W.png</file>
+        <file>tank_att/TankAttackA_E.png</file>
+        <file>tank_death/TankDeath_E.png</file>
+        <file>main_terrain.png</file>
+    </qresource>
+</RCC>

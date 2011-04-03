@@ -39,3 +39,6 @@ HEADERS += mainwindow.h \
     other_fighting_models.h
 FORMS += mainwindow.ui \
     beforeWar.ui
+
+RESOURCES += \
+    mainres.qrc

@@ -53,11 +53,14 @@ public:
             //Раскоментить следующию строчку когда танков будет адекватное количество а не 8 штук
             if ((defenders.count() == 0) || ((tanks.count() <= model_descrip.N_tanks*(100-model_descrip.tankSurrenderAt)/100) && (shot_order>3))) {
                 if (!defenders.count())
-                    emit action (new EndWarAction("Cannons are loosers"));
+                    emit action (new EndWarAction(
+                            QString::fromUtf8("Противотанковый резерв уничтожен")));
                 else if (tanks.count()>0)
-                    emit action(new EndWarAction("Tanks stepped back"));
+                    emit action(new EndWarAction(
+                            QString::fromUtf8("Танки отступают")));
                 else
-                    emit action(new EndWarAction("Tanks are loosers"));
+                    emit action(new EndWarAction(
+                            QString::fromUtf8("Танки уничтожены")));
                 return;
             }
 

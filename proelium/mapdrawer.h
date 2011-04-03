@@ -16,6 +16,7 @@
 #include "GameMap.h"
 #include "reshelpers/resloader1.h"
 #include "reshelpers/anigroup.h"
+#include "GlobalConst.h"
 
 class MapDrawer : public QObject, public UnitVisitor {
     Q_OBJECT
@@ -33,7 +34,7 @@ public:
     MapDrawer(QGraphicsScene* sc, GameMap* m);
     void repaint();
     void paintField();
-    void placeArmies();
+    void placeArmies(ModelParam*);
 
     virtual void visit(NewUnitsAppearedAction&) {
         qDebug() << "NewUnitsAppearedAction";

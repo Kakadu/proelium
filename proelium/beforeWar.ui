@@ -73,7 +73,7 @@
                <number>1</number>
               </property>
               <property name="value">
-               <number>50</number>
+               <number>65</number>
               </property>
              </widget>
             </item>
@@ -104,6 +104,9 @@
             <property name="maximum">
              <number>3</number>
             </property>
+            <property name="value">
+             <number>3</number>
+            </property>
            </widget>
           </item>
           <item row="2" column="0">
@@ -119,7 +122,7 @@
              <number>1</number>
             </property>
             <property name="maximum">
-             <number>3</number>
+             <number>2</number>
             </property>
            </widget>
           </item>

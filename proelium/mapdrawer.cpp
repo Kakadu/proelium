@@ -11,6 +11,7 @@
 #include <iostream>
 #include "reshelpers/gametextureitem.h"
 #include "reshelpers/rescontainer.h"
+#include "GlobalConst.h"
 
 using namespace std;
 
@@ -174,22 +175,35 @@ void MapDrawer::repaint()  {
             }
 	}
 }
-void MapDrawer::placeArmies() {
+void MapDrawer::placeArmies(ModelParam *param) {
     // Расстановка армии. TODO: вынести в другое место.
     int w  = _map->width();
     int h = _map->height();
     const int s = w+h+2;
+    Unit* unit;
 
     for (int j=0; j<=w; ++j) {
         //танки слева
-        Unit* unit = new Unit("tank", _map->nextId());
-        _map->getSquare1(j,w-j)->addUnit(unit);
-        unit = new Unit ("tank", _map->nextId());
-        _map->getSquare1(j,w-j+1)->addUnit(unit);
+        if (j<param->tankPlatoonCount/2){
+            unit = new Unit("tank", _map->nextId());
+            _map->getSquare1(j,w-j)->addUnit(unit);
+            unit = new Unit ("tank", _map->nextId());
+            _map->getSquare1(j,w-j+1)->addUnit(unit);
+        } else {
+            param->tankPlatoonCount=0;
+        }
+
 	//гаубицы справа
-        unit = new Unit("d30",_map->nextId());
-	_map->getSquare1(h+1+j,s-1-j)->addUnit(unit);
+        if (j<param->d30PlatoonCount){
+            unit = new Unit("d30",_map->nextId());
+            _map->getSquare1(h+1+j,s-1-j)->addUnit(unit);
+        } else {
+            param->d30PlatoonCount = 0;
+        }
+
     }
+    if (param->tankPlatoonCount)
+    param->tankPlatoonCount -= 2*(w+1);
 }
 /**
   Отрисовка рельефа.

@@ -18,6 +18,7 @@ public:
     int d30PlatoonCount;
 
 
+
 public:
     ModelParam(){
       N_tanks = 54;

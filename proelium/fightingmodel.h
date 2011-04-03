@@ -207,14 +207,16 @@ public:
         for (int i = 0; i < s; ++i)
             for (int j = 0; j < s; ++j) {
             sd = m->getSquare1(i,j);
+
             if (sd==NULL)
                 continue;
             foreach(Unit* u, sd->units) {
-                if (u->id>100)
+                if (u->name.compare(QString("tank")) != 0 )
                     defenders.push_back(u);
                 else
                     tanks.push_back(u);
             }
+
         }
     }
     signals:
@@ -223,8 +225,18 @@ public:
         void next() {
             qDebug()<<"MainModel.next";
             //Раскоментить следующию строчку когда танков будет адекватное количество а не 8 штук
-            if ((defenders.count() == 0) || (tanks.count() == 0 /*<= model_descrip.get_N_refusal()*/)) {
-		emit action(new EndWarAction(""));
+//            if ((defenders.count() == 0) || (tanks.count() == 0 /*<= model_descrip.get_N_refusal()*/)) {
+//		emit action(new EndWarAction(""));
+//              return;
+//        }
+
+            if ((defenders.count() == 0) || ((tanks.count() <= model_descrip.N_tanks*(100-model_descrip.tankSurrenderAt)/100) && (shot_order>3))) {
+                if (!defenders.count())
+                    emit action (new EndWarAction("Cannons are loosers"));
+                else if (tanks.count()>0)
+                    emit action(new EndWarAction("Tanks stepped back"));
+                else
+                    emit action(new EndWarAction("Tanks are loosers"));
                 return;
             }
 
@@ -234,20 +246,22 @@ public:
                 return;
             }
 
-            if (shot_order==2)  {
+            if (shot_order==1)  {
                 qDebug()<<"shot_order = 2"<<endl;
                 int w  = _map->width();
                 Unit* additional;
                 for (int i=0; i <= w; i++)   {
-                    additional = new Unit("tank",i+w+qrand()%1000);
-                    _map->getSquare1(i,w-i)->addUnit(additional);
-                    tanks.push_back(additional);
-                    new_borns.append(additional);
+                    if (i<model_descrip.tankPlatoonCount/2) {
+                        additional = new Unit("tank",i+w+qrand()%1000);
+                        _map->getSquare1(i,w-i)->addUnit(additional);
+                        tanks.push_back(additional);
+                        new_borns.append(additional);
 
-                    additional = new Unit("tank",i+w*2+qrand()%1000);
-                    _map->getSquare1(i,w+1-i)->addUnit(additional);
-                    tanks.push_back(additional);
-                    new_borns.append(additional);
+                        additional = new Unit("tank",i+w*2+qrand()%1000);
+                        _map->getSquare1(i,w+1-i)->addUnit(additional);
+                        tanks.push_back(additional);
+                        new_borns.append(additional);
+                    }
                 }
                 qDebug()<<"shot_order = 2"<<endl;
                 shot_order++;
@@ -328,6 +342,186 @@ public:
 
             qDebug()<<"We are here"<<endl;
         }
+     }
+};
+
+
+
+// Война сначала с ПТУРами и после гаубицами
+class PtursFightingModel: public QObject, protected FightingModel {
+    Q_OBJECT
+private:
+    int tank_queue;
+    int ptur_queue;
+    int shot_order;
+    int possib;
+    bool succes;
+    int w, h, s;
+    QQueue<Unit*> tanks;
+    QQueue<Unit*> defenders;
+    QQueue<Unit*> pturs;
+    QList <Unit*> new_borns;
+    ModelParam model_descrip;
+public:
+    PtursFightingModel(GameMap* m, ModelParam* current) {
+        _map = m;
+        w = m->width();
+        h = m->height();
+        s = w + h + 2;
+         model_descrip = *current;
+        possib = 5;
+        tank_queue = 0;
+        ptur_queue = 0;
+        shot_order = 0;
+        new_borns.clear();
+        int s = m->width() + m->height() + 2;
+        MapSquare* sd;
+        for (int i = 0; i < s; ++i)
+            for (int j = 0; j < s; ++j) {
+            sd = m->getSquare1(i,j);
+            if (sd==NULL)
+                continue;
+            foreach(Unit* u, sd->units) {
+                if (u->name.compare(QString("tank")) != 0 )
+                    defenders.push_back(u);
+                else
+                    tanks.push_back(u);
+            }
+        }
+    }
+    signals:
+        void action(AbstractUnitAction*);
+    public slots:
+        void next() {
+            qDebug()<<"ComplexFightingModel.next";
+            //Раскоментить следующию строчку когда танков будет адекватное количество а не 8 штук
+ //           if ((shot_order!=0 && (pturs.count() == 0)) || (tanks.count() == 0 /*<= model_descrip.get_N_refusal()*/)) {
+ //               emit action(new EndWarAction("this is the end."));
+ //               return;
+ //           }
+
+            if (((tanks.count() <= model_descrip.N_tanks*(100-model_descrip.tankSurrenderAt)/100)  && (shot_order>2)) || (pturs.count()==0 && shot_order>2)) {
+                if (tanks.count()>0 && pturs.count())
+                    emit action(new EndWarAction("Tanks stepped back"));
+                else if (!pturs.count())
+                    emit action(new EndWarAction("Pturs are looser"));
+                else
+                    emit action(new EndWarAction("Tanks are loosers"));
+                return;
+            }
+
+            if (!new_borns.empty()) {
+                new_borns.clear();
+                emit action(new NewUnitsAppearedAction());
+                return;
+            }
+
+            if (shot_order==0)  {
+
+                Unit* additional;
+                for (int i = w/2; i <=w/2+model_descrip.pturPlatoonCount-1; i++) {
+                    additional = new Unit ("ptur", _map->nextId() );
+                    _map->getSquare1((h+1)/2+i,s-(h+1)/2-i)->addUnit(additional);
+                    pturs.push_back(additional);
+                    new_borns.append(additional);
+                }
+                shot_order++;
+                emit action (new NoAction());
+                return;
+            }
+
+            if (shot_order==1) {
+                for (int shet=0; shet<tanks.count(); shet++)  {
+
+              Unit* mainTank = tanks.dequeue();
+              int i,j;
+              MapSquare* initSq = _map->locateUnit(i,j,mainTank);
+              MoveUnitAction* act;
+              MapSquare* sq;
+              QPair<int,int> dd(0,0);
+
+                  dd = directions[1];
+                  sq = _map->getSquare1(i+dd.first,j+dd.second);
+//                qDebug()<<dd.first<<"\t"<<dd.second<<endl;
+
+                  act = new MoveUnitAction(i,j,i+dd.first,j+dd.second, mainTank);
+//                qDebug()<<"We are here"<<endl;
+                  initSq->removeUnit(mainTank);
+                  sq->addUnit(mainTank);
+//                qDebug()<<"We are here"<<endl;
+              tanks.push_back(mainTank);
+//                qDebug()<<"We are here"<<endl;
+              emit action(act);
+
+            }
+            shot_order++;
+            return;
+            }
+
+            if (shot_order==2)  {
+                qDebug()<<"shot_order = 2"<<endl;
+                Unit* additional;
+                for (int i=0; i <= w; i++)   {
+                    if (i<model_descrip.tankPlatoonCount/2) {
+                        additional = new Unit("tank",  _map->nextId() );
+                        _map->getSquare1(i,w-i)->addUnit(additional);
+                        tanks.push_back(additional);
+                        new_borns.append(additional);
+
+                        additional = new Unit("tank", _map->nextId() );
+                        _map->getSquare1(i,w+1-i)->addUnit(additional);
+                        tanks.push_back(additional);
+                        new_borns.append(additional);
+                    }
+                }
+                qDebug()<<"shot_order = 2"<<endl;
+                shot_order++;
+                emit action (new NoAction());
+               return;
+            }
+
+            if (pturs.count()!=0)   {
+                FireUnitAction*  act = NULL;
+                if (ptur_queue%2)   {
+                    Unit* attaker = tanks.dequeue();
+                    Unit* victim  = pturs.dequeue();
+                    succes = qrand()%4;
+                    succes = !succes;
+                    act = new FireUnitAction(attaker->id, attaker->name,
+                                             victim->id, victim->name, succes);
+                    if (!succes)
+                        pturs.push_back(victim);
+                    else
+                        victim->setAlive(false);
+                    tanks.push_back(attaker);
+                    ptur_queue++;
+                    emit action(act);
+                    return;
+                } else {
+                    Unit* attaker = pturs.dequeue();
+                    Unit* victim  = tanks.dequeue();
+                    succes = qrand()%20;
+                    act = new FireUnitAction(attaker->id, attaker->name,
+                                             victim->id, victim->name, succes);
+                    if (!succes)
+                        tanks.push_back(victim);
+                    else
+                        victim->setAlive(false);
+
+                    pturs.push_back(attaker);
+
+                    ptur_queue++;
+                    emit action(act);
+                    return;
+                }
+
+            }
+
+
+
+return;
+
+
      }
 };
 

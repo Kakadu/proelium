@@ -51,8 +51,13 @@ public:
         void next() {
             qDebug()<<"ComplexFightingModel.next";
             //Раскоментить следующию строчку когда танков будет адекватное количество а не 8 штук
-            if ((defenders.count() == 0) || (tanks.count() == 0 /*<= model_descrip.get_N_refusal()*/)) {
-		emit action(new EndWarAction("this is the end."));
+            if ((defenders.count() == 0) || ((tanks.count() <= model_descrip.N_tanks*(100-model_descrip.tankSurrenderAt)/100) && (shot_order>3))) {
+                if (!defenders.count())
+                    emit action (new EndWarAction("Cannons are loosers"));
+                else if (tanks.count()>0)
+                    emit action(new EndWarAction("Tanks stepped back"));
+                else
+                    emit action(new EndWarAction("Tanks are loosers"));
                 return;
             }
 
@@ -65,7 +70,7 @@ public:
             if (shot_order==0)  {
 
                 Unit* additional;
-                for (int i = 0; i <=2; i++) {
+                for (int i = w/2; i <=w/2+model_descrip.pturPlatoonCount-1; i++) {
                     additional = new Unit ("ptur", _map->nextId() );
                     _map->getSquare1((h+1)/2+i,s-(h+1)/2-i)->addUnit(additional);
                     pturs.push_back(additional);
@@ -117,15 +122,17 @@ public:
                 qDebug()<<"shot_order = 2"<<endl;
                 Unit* additional;
                 for (int i=0; i <= w; i++)   {
-                    additional = new Unit("tank",  _map->nextId() );
-                    _map->getSquare1(i,w-i)->addUnit(additional);
-                    tanks.push_back(additional);
-                    new_borns.append(additional);
+                    if (i<model_descrip.tankPlatoonCount/2) {
+                        additional = new Unit("tank",  _map->nextId() );
+                        _map->getSquare1(i,w-i)->addUnit(additional);
+                        tanks.push_back(additional);
+                        new_borns.append(additional);
 
-                    additional = new Unit("tank", _map->nextId() );
-                    _map->getSquare1(i,w+1-i)->addUnit(additional);
-                    tanks.push_back(additional);
-                    new_borns.append(additional);
+                        additional = new Unit("tank", _map->nextId() );
+                        _map->getSquare1(i,w+1-i)->addUnit(additional);
+                        tanks.push_back(additional);
+                        new_borns.append(additional);
+                    }
                 }
                 qDebug()<<"shot_order = 2"<<endl;
                 shot_order++;

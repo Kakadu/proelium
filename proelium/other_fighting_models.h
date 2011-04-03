@@ -81,7 +81,7 @@ public:
                 return;
             }
 
-            if (pturs.count()!=0)   {
+/*            if (pturs.count()!=0)   {
                 FireUnitAction*  act = NULL;
                 if (ptur_queue%2)   {
                     Unit* attaker = tanks.dequeue();
@@ -116,7 +116,7 @@ public:
                     return;
                 }
 
-            }
+            }*/
 
             if (shot_order==2)  {
                 qDebug()<<"shot_order = 2"<<endl;
@@ -138,6 +138,49 @@ public:
                 shot_order++;
                 emit action (new NoAction());
                return;
+            }
+            else if (shot_order==3) {
+
+                if (pturs.count()!=0)   {
+                    FireUnitAction*  act = NULL;
+                    if (ptur_queue%2)   {
+                        Unit* attaker = tanks.dequeue();
+                        Unit* victim  = pturs.dequeue();
+                        succes = qrand()%4;
+                        succes = !succes;
+                        act = new FireUnitAction(attaker->id, attaker->name,
+                                                 victim->id, victim->name, succes);
+                        if (!succes)
+                            pturs.push_back(victim);
+                        else
+                            victim->setAlive(false);
+                        tanks.push_back(attaker);
+                        ptur_queue++;
+                        emit action(act);
+                        return;
+                    } else {
+                        Unit* attaker = pturs.dequeue();
+                        Unit* victim  = tanks.dequeue();
+                        succes = qrand()%20;
+                        act = new FireUnitAction(attaker->id, attaker->name,
+                                                 victim->id, victim->name, succes);
+                        if (!succes)
+                            tanks.push_back(victim);
+                        else
+                            victim->setAlive(false);
+
+                        pturs.push_back(attaker);
+
+                        ptur_queue++;
+                        emit action(act);
+                        return;
+                    }
+
+                } else
+                    shot_order++;
+                    emit action (new NoAction);
+                    return;
+
             }
             else {
 //            FireUnitAction* act = NULL;

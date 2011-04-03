@@ -242,7 +242,7 @@ public:
                 Unit* attacker = defenders.dequeue();
                 Unit* victim   = tanks.dequeue();
                 defenders.push_back(attacker);
-                succes = random()%4;
+                succes = qrand()%4;
                 succes = !succes;
                 act = new FireUnitAction(attacker->id, attacker->name,
                                          victim->id, victim->name, succes);

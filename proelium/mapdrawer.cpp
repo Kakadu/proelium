@@ -219,10 +219,6 @@ void MapDrawer::paintField() {
     TerrainPack* p = dynamic_cast<TerrainPack*>(sp);
     Images TerrainSprites = p->content;
 
-    QList <int> set_textures;
-    set_textures<<0<<1<<3<<4<<9<<10<<12<<13<<40<<39<<37<<36<<31<<30<<28<<27;
-    int len = set_textures.count();
-
     for (int i=0; i<s; ++i)
 	for (int j=0; j<s; ++j) {
 	    MapSquare* sq = _map->getSquare1(i,j);
@@ -230,22 +226,6 @@ void MapDrawer::paintField() {
 		sq->setTerrainSprite(40);
     }
     MapSquare* sq;
-
-    /*
-    int i_trnsl, j_trnsl;
-
-    qDebug()<<"_map->getStrN() \t"<<_map->getStrN()<<endl;
-
-    _map->getCoords(i_trnsl, j_trnsl, 1,1);
-
-    sq = _map->getSquare1(i_trnsl, j_trnsl);
-    sq->setTerrainSprite(56);
-
-    _map->getCoords(i_trnsl, j_trnsl, 0,1);
-
-    sq = _map->getSquare1(i_trnsl, j_trnsl);
-    sq->setTerrainSprite(56); */
-
 
     // правый ряд
     for (int j=0; j<=wc; ++j) {
@@ -314,7 +294,6 @@ void MapDrawer::paintField() {
 	    MapSquare* sq = _map->getSquare1(wc+i-j,j+i);            
 	    if (sq != NULL)  {
 		QPixmap map = TerrainSprites.at(sq->terrainSprite());
-//		QPixmap map = TerrainSprites.at(40);
 		GameTextureItem* item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
 		item->setPixmap(map);
 		QPoint loc = screenCoords(wc+i-j,j+i);
@@ -330,8 +309,6 @@ void MapDrawer::paintField() {
 	    MapSquare* sq = _map->getSquare1(wc+1+i-j,j+i);
 	    if (sq!=NULL) {
 		QPixmap map = TerrainSprites.at(sq->terrainSprite());
-//		QPixmap map = TerrainSprites.at(8);
-
 		GameTextureItem* item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
 		item->setPixmap(map);
 		QPoint loc = screenCoords(wc+1+i-j,j+i);

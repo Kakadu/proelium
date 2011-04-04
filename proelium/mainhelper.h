@@ -36,7 +36,7 @@ public slots:
 
 	Ui::BeforeWar  *ui = dialog->getUI();
         param->d30PlatoonCount = ui->d30Count->value()*6;
-        param->tankPlatoonCount = ui->tanksCount->value()*18;
+	param->tankPlatoonCount = ui->tanksCount->value()*3;
         param->N_tanks = param->tankPlatoonCount;
         param->pturPlatoonCount = ui->pturCount->value()*3;
 
@@ -44,7 +44,7 @@ public slots:
         if (param->tankSurrender)
             param->tankSurrenderAt = ui->surrenderSpin->value();
         else
-            param->tankSurrenderAt = 0;
+	    param->tankSurrenderAt = 100;
 
 
 	if (ui->TDD1_radio->isChecked())

@@ -230,7 +230,8 @@ public:
 //              return;
 //        }
 
-            if ((defenders.count() == 0) || ((tanks.count() <= model_descrip.N_tanks*(100-model_descrip.tankSurrenderAt)/100) && (shot_order>3))) {
+	    if ((defenders.count() == 0) ||
+		((tanks.count() <= model_descrip.N_tanks*(100-model_descrip.tankSurrenderAt)/100) && (shot_order>3))) {
                 if (!defenders.count())
 		    emit action (new EndWarAction(
 			    QString::fromUtf8("Орудия уничтожены.")) );
@@ -255,12 +256,12 @@ public:
                 Unit* additional;
                 for (int i=0; i <= w; i++)   {
                     if (i<model_descrip.tankPlatoonCount/2) {
-                        additional = new Unit("tank",i+w+qrand()%1000);
+			additional = new Unit("tank", _map->nextId() );
                         _map->getSquare1(i,w-i)->addUnit(additional);
                         tanks.push_back(additional);
                         new_borns.append(additional);
 
-                        additional = new Unit("tank",i+w*2+qrand()%1000);
+			additional = new Unit("tank", _map->nextId() );
                         _map->getSquare1(i,w+1-i)->addUnit(additional);
                         tanks.push_back(additional);
                         new_borns.append(additional);
@@ -404,7 +405,9 @@ public:
  //               return;
  //           }
 
-            if (((tanks.count() <= model_descrip.N_tanks*(100-model_descrip.tankSurrenderAt)/100)  && (shot_order>2)) || (pturs.count()==0 && shot_order>2)) {
+	    if (((tanks.count() <= model_descrip.N_tanks*(100-model_descrip.tankSurrenderAt)/100)
+			&& (shot_order>2))
+		|| (pturs.count()==0 && shot_order>2)) {
                 if (tanks.count()>0 && pturs.count())
 		    emit action(new EndWarAction(
 			    QString::fromUtf8("Танки отступают")) );

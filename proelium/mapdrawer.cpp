@@ -8,14 +8,15 @@
 #include <QPixmap>
 #include <QVector>
 #include <reshelpers/rescontainer.h>
-#include <iostream>
 #include "reshelpers/gametextureitem.h"
 #include "reshelpers/rescontainer.h"
 #include "GlobalConst.h"
-
-using namespace std;
+#include "textures/UnitTextureItem.h"
+#include "textures/TerrainTextureItem.h"
+#include "action/UserActionHypervisor.h"
 
 const QColor& MapDrawer::grayColor = QColor(255,0,255);
+extern UserActionHyperVisor* MainHyperVisor;
 
 MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
     LEFT_OFFSET = TOP_OFFSET = 5;
@@ -108,17 +109,19 @@ void MapDrawer::repaint()  {
 	    QPoint terrLoc = screenCoords(wc+i-j,j+i);
 	    //TODO: итериться наверное не стоит, надо рисовать только верхний элемент
             foreach (Unit* u, sq->units) {
-		GameTextureItem* item;
+                UnitTextureItem* item;
 
 		if (unitGraphics.contains(u->id))
 		    item = unitGraphics.value(u->id);
 		else {
-		    item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
-		    unitGraphics.insert(u->id,item);
+                    item = new UnitTextureItem(_scene, u);
+                    unitGraphics.insert(u->id, item);
 		}
+
 		UnitPack* pack = dynamic_cast<UnitPack*>(Sprites.value(u->name));
                 if (pack==NULL)
                     continue;
+
                 if (u->alive()) {
                         QPixmap norm = pack->attack.at(0);
                         item->setPixmap(norm);
@@ -126,16 +129,11 @@ void MapDrawer::repaint()  {
                         item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
                                         terrLoc.y() - h/2 + _imageHeight/2);
                 } else {
-                        int len = pack->death.count();
-                        QPixmap norm = pack->death.at(len-1);
-                        int w = norm.width(), h = norm.height();
-                        item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
-                                        terrLoc.y() - h/2 + _imageHeight/2);
-
-                        item->setPixmap(norm);
+                    // remove UnitTextureItem
                 }
 	    }
 	}
+
     leftOffset += _imageWidth/2;
     topOffset  -= _imageHeight/2;
 
@@ -146,14 +144,16 @@ void MapDrawer::repaint()  {
 		continue;
 	    QPoint terrLoc = screenCoords(wc+i-j+1,j+i);
             foreach (Unit* u, sq->units) {
-		GameTextureItem* item;
+                UnitTextureItem* item;
 
 		if (unitGraphics.contains(u->id))
 		    item = unitGraphics[u->id];
 		else {
-		    item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
+                    //item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
+                    item = new UnitTextureItem(_scene, u);
 		    unitGraphics.insert(u->id,item);
 		}
+
 		UnitPack* pack = dynamic_cast<UnitPack*>(Sprites[u->name]);
                 if (pack==NULL)
                     continue;
@@ -164,17 +164,12 @@ void MapDrawer::repaint()  {
                         item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
                                         terrLoc.y() - h/2 + _imageHeight/2);
                 } else {
-                        int len = pack->death.count();
-                        QPixmap norm = pack->death.at(len-1);
-                        int w = norm.width(), h = norm.height();
-                        item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
-                                        terrLoc.y() - h/2 + _imageHeight/2);
-
-                        item->setPixmap(norm);
+                    // TODO: remove UnitTextureItem
                 }
             }
 	}
 }
+/*
 void MapDrawer::placeArmies(ModelParam *param) {
     // Расстановка армии. TODO: вынести в другое место.
     int w  = _map->width();
@@ -205,6 +200,7 @@ void MapDrawer::placeArmies(ModelParam *param) {
     if (param->tankPlatoonCount)
     param->tankPlatoonCount -= 2*(w+1);
 }
+*/
 /**
   Отрисовка рельефа.
   */
@@ -294,7 +290,7 @@ void MapDrawer::paintField() {
 	    MapSquare* sq = _map->getSquare1(wc+i-j,j+i);            
 	    if (sq != NULL)  {
 		QPixmap map = TerrainSprites.at(sq->terrainSprite());
-		GameTextureItem* item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
+                TerrainTextureItem* item = new TerrainTextureItem(_scene);
 		item->setPixmap(map);
 		QPoint loc = screenCoords(wc+i-j,j+i);
 		item->setOffset(loc.x(),loc.y());
@@ -309,7 +305,7 @@ void MapDrawer::paintField() {
 	    MapSquare* sq = _map->getSquare1(wc+1+i-j,j+i);
 	    if (sq!=NULL) {
 		QPixmap map = TerrainSprites.at(sq->terrainSprite());
-		GameTextureItem* item = new GameTextureItem(_scene,_imageWidth,_imageHeight);
+                TerrainTextureItem* item = new TerrainTextureItem(_scene);
 		item->setPixmap(map);
 		QPoint loc = screenCoords(wc+1+i-j,j+i);
 		item->setOffset(loc.x(),loc.y());

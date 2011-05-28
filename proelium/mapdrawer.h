@@ -17,6 +17,7 @@
 #include "reshelpers/resloader1.h"
 #include "reshelpers/anigroup.h"
 #include "GlobalConst.h"
+#include <textures/UnitTextureItem.h>
 
 class MapDrawer : public QObject, public UnitVisitor {
     Q_OBJECT
@@ -24,7 +25,7 @@ private:
     int LEFT_OFFSET, TOP_OFFSET;
     QGraphicsScene* _scene;
     GameMap* _map;
-    QMap<int, GameTextureItem*> unitGraphics;
+    QMap<int, UnitTextureItem*> unitGraphics;
     int _imageWidth, _imageHeight;
     static const QColor& grayColor;
     QPoint screenCoords(int,int);
@@ -42,8 +43,8 @@ public:
 	endVisiting();
     }
 
-    virtual void visit(FireUnitAction& act) {
-          qDebug() << "FireUnitAction";
+    virtual void visit(FireUnitAction& ) {
+/*          qDebug() << "FireUnitAction";
 	QString res = act.result ? "killed" : "fired";
 	qDebug() << act.attackerID << " " << res << " " << act.victimID;
 
@@ -66,16 +67,11 @@ public:
 	    QObject::connect(timer, SIGNAL(timeout2(GameTextureItem*)),
 			     this, SLOT(setDeathPixmap(GameTextureItem*)));
 	}
-	aniGroup->startSeq(timer);
+        aniGroup->startSeq(timer); */
     }
 
-    virtual void visit(MoveUnitAction& act) {
-        qDebug() << "MoveUnitAction";
-	/*
-	  Тут логика сейчас представляется мне такой. Танк двигает из одной
-	  клетки во вторую. Мы двигаем спрайт по прямой, одновременно сменяя кадры.
-	  Т.е. показываем две анимации параллельно.
-	  */
+    virtual void visit(MoveUnitAction& ) {
+/*        qDebug() << "MoveUnitAction";
 	qDebug() << act.unit()->id << " moves";
 	GameTextureItem* item;
 	if (unitGraphics.contains(act.unit()->id)) {
@@ -88,6 +84,7 @@ public:
 	    qDebug() << "Unit with id " << act.unit()->id << "not found. continue";
 	    endVisiting();
 	}
+        */
     }
 
     virtual void visit(EndWarAction& act) {
@@ -115,17 +112,11 @@ public slots:
     }
     void endVisiting() {
 	aniGroup->clear();
-	qDebug() << "end visiting";
 	wakeUpModel();	
     }
     void setDeathPixmap(GameTextureItem* item) {
 	item->setDeathSprite();
     }
-
-    /*void removePixmap(GameTextureItem* item) {
-	_scene->removeItem(item);
-    } */
-
 private slots:
     void wakeUpModel() {
 	emit continueModel();

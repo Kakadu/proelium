@@ -17,6 +17,7 @@ Q_OBJECT
     Q_PROPERTY(int curSprite READ curSprite WRITE  setCurSprite);
     Q_PROPERTY(QPointF offset READ offset WRITE setOffset);
     int DURATION;
+
     QPropertyAnimation* animHelperFire;
     QPropertyAnimation* animHelperMove;
     QPropertyAnimation* animHelperDeath;
@@ -36,6 +37,11 @@ Q_OBJECT
 	ani->setStartValue(0);
 	ani->setEndValue(sprites.count()-1);
 	return ani;
+    }
+
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *) {
+
+        qDebug() << "Mouse released\n";
     }
 
     void initFireHelper() {

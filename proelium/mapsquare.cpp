@@ -12,4 +12,5 @@ void MapSquare::removeUnit(Unit* u) {
 
 MapSquare::MapSquare()
 {
+       units.clear();
 }

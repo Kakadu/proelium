@@ -16,9 +16,10 @@ public:
     bool** field_mask;
     explicit GameMap(int,int,QObject *parent = 0);
     MapSquare* getSquare1(int i,int j);
-    int width() { return _width; }
-    int height() { return _height; }
+    inline int width() { return _width; }
+    inline int height() { return _height; }
     void init();
+
     MapSquare* locateUnit(int& i, int& j, Unit* uu) {
 	MapSquare* sq;
 	for (i=0; i<s(); ++i)
@@ -45,31 +46,8 @@ public:
     int nextId() {
         return _lastId++;
     }
-    /** get string number */
-    inline int getStrN(void) {
-        double w = this->width();
-        return 2*w+3;
-    }
-
-    inline int getStrM(int M) {
-        return (M+1)/2;
-    }
-
-    /** get number of 1st column  */
-    inline int get1stColumn(int N) {
-        return _width +1 - (N+1)/2;
-    }
-
-    inline void getCoords(int& i, int& j, int N, int x) {
-        int s = getStrM(N);
-        int k = get1stColumn(N);
-	i = x+s;
-        j  = k+x;
-    }
-
 signals:
     void unitRemoved(int);
-public slots:
 
 };
 

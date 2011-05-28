@@ -1,6 +1,8 @@
 #include "rescontainer.h"
+#include "action/UserActionHypervisor.h"
 
 QMap<QString, SpritesPack*> Sprites;
+UserActionHyperVisor* MainHyperVisor;
 
 QPair<int,int> directions[8] = {
     QPair<int,int>( 1, 0),  //NE

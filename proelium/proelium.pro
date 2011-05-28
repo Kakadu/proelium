@@ -1,23 +1,20 @@
 # -------------------------------------------------
 # Project created by QtCreator 2011-01-03T15:12:49
 # -------------------------------------------------
-QT += opengl \
-    qt3support
+QT += opengl qt3support
 TARGET = proelium
 TEMPLATE = app
 SOURCES += main.cpp \
-    mainwindow.cpp \
     framecollection.cpp \    
     GameMap.cpp \
     mapsquare.cpp \
     reshelpers/resloader1.cpp \
     mapdrawer.cpp \
-    action/action.cpp \
     reshelpers/rescontainer.cpp \
     reshelpers/gametextureitem.cpp \
     reshelpers/container.cpp \
     reshelpers/anigroup.cpp
-HEADERS += mainwindow.h \
+HEADERS += \
     framecollection.h \
     unit.h \
     GameMap.h \
@@ -27,10 +24,15 @@ HEADERS += mainwindow.h \
     action/action.h \
     reshelpers/rescontainer.h \
     reshelpers/gametextureitem.h \
-    reshelpers/container.h \
     reshelpers/anigroup.h \
-    GlobalConst.h
-FORMS += mainwindow.ui
+    GlobalConst.h \
+    textures/AbstractTextureItem.h \
+    textures/UnitTextureItem.h \
+    textures/TerrainTextureItem.h \
+    action/UserActionHypervisor.h
+FORMS +=
 
 RESOURCES += \
     mainres.qrc
+
+QMAKE_CXXFLAGS += -std=c++0x

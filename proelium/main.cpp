@@ -12,15 +12,13 @@
 #include "fightingmodel.h"
 #include "reshelpers/rescontainer.h"
 #include <ctime>
-#include "beforeWar.h"
-#include "mainhelper.h"
 
 extern QMap<QString, SpritesPack*> Sprites;
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    //srand(time(NULL));
-    MainHelper m;
+
+
     return a.exec();
 }

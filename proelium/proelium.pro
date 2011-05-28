@@ -14,12 +14,9 @@ SOURCES += main.cpp \
     mapdrawer.cpp \
     action/action.cpp \
     reshelpers/rescontainer.cpp \
-    fightingmodel.cpp \
     reshelpers/gametextureitem.cpp \
     reshelpers/container.cpp \
-    reshelpers/anigroup.cpp \
-    beforeWar.cpp \
-    mainhelper.cpp
+    reshelpers/anigroup.cpp
 HEADERS += mainwindow.h \
     framecollection.h \
     unit.h \
@@ -29,16 +26,11 @@ HEADERS += mainwindow.h \
     mapdrawer.h \
     action/action.h \
     reshelpers/rescontainer.h \
-    fightingmodel.h \
     reshelpers/gametextureitem.h \
     reshelpers/container.h \
     reshelpers/anigroup.h \
-    GlobalConst.h \
-    beforeWar.h \
-    mainhelper.h \
-    other_fighting_models.h
-FORMS += mainwindow.ui \
-    beforeWar.ui
+    GlobalConst.h
+FORMS += mainwindow.ui
 
 RESOURCES += \
     mainres.qrc

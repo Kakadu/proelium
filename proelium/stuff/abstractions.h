@@ -7,8 +7,8 @@ class AbstractDrawer
 {
     //Q_OBJECT
 public:
-     void repaint() {
-        qDebug() << "AbstractDrawer::repaint";
+     virtual void repaint() {
+        qDebug() << "AbstractDrawer::repaint\nIf u see this message You'll find bug in code";
      }
 };
 

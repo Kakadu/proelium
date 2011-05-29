@@ -1,5 +1,6 @@
 #ifndef USERACTIONHYPERVISOR_H
 #define USERACTIONHYPERVISOR_H
+
 #include <QKeyEvent>
 #include "GameMap.h"
 #include "unit.h"
@@ -42,7 +43,5 @@ public:
     }
     virtual ~UserActionHyperVisor() {}
 };
-
-
 
 #endif // USERACTIONHYPERVISOR_H

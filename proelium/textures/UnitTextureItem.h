@@ -25,7 +25,7 @@ public:
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) {
         qDebug() << "mouse pressed " << event->buttonDownPos(Qt::LeftButton);
-        if (MainHyperVisor == nullptr)
+        if (MainHyperVisor == NULL)
             return;
         MainHyperVisor->setCurUnit(_unit);
 

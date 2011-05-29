@@ -29,14 +29,10 @@ public:
     void keyPressEvent(QKeyEvent *event) {
         qDebug() << event->key();
         int curkey = event->key();
-        if ((curkey >= Qt::Key_1) && (curkey <= Qt::Key_9) && (_curUnit != nullptr)) {
+        if ((curkey >= Qt::Key_1) && (curkey <= Qt::Key_9) && (_curUnit != NULL)) {
             int dir = curkey - 0x30;
 
-            qDebug() << "dir = " << dir;
-            qDebug() << "_map = " << _map << " _curUnit = " << _curUnit;
             Game::Direction d = (Game::Direction)dir;
-            QString n = _map->className();
-            bool b = _map->f();
             if (_map->tryMove(_curUnit, d)) {
                 qDebug() << "call repaint";
                 _drawer->repaint();

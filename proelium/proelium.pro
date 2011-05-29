@@ -31,7 +31,8 @@ HEADERS += \
     textures/UnitTextureItem.h \
     textures/TerrainTextureItem.h \
     action/UserActionHypervisor.h \
-    stuff/abstractions.h
+    stuff/abstractions.h \
+    stuff/consts.h
 FORMS +=
 
 RESOURCES += \

@@ -1,10 +1,7 @@
 #include "GameMap.h"
-#include <QVector>
-#include <iostream>
 #include "mapsquare.h"
-#include "cstdlib"
 
-using namespace std;
+extern QPair<int,int> *directions;
 
 GameMap::GameMap(int w, int h,QObject *parent) : QObject(parent) {
     _lastId = 0;
@@ -61,3 +58,19 @@ MapSquare* GameMap::getSquare1(int i,int j) {
     return _field[i][j];
 }
 
+bool GameMap::tryMove(Unit *u, Game::Direction dir) {
+    int i,j;
+    MapSquare* src = locateUnit(i,j,u);
+    if (src == nullptr) {
+        qDebug() << "can't move: mapsquare not found";
+        return false;
+    }
+    MapSquare* dst = getSquare1(i+directions[dir].first,
+                                j+directions[dir].second);
+    if (dst == nullptr)
+        return false;
+
+    src->removeUnit(u);
+    dst->addUnit(u);
+    return true;
+}

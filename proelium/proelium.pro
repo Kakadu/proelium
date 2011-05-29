@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     reshelpers/rescontainer.cpp \
     reshelpers/gametextureitem.cpp \
     reshelpers/container.cpp \
-    reshelpers/anigroup.cpp
+    reshelpers/anigroup.cpp \
+    stuff/abstractions.cpp
 HEADERS += \
     framecollection.h \
     unit.h \
@@ -29,7 +30,8 @@ HEADERS += \
     textures/AbstractTextureItem.h \
     textures/UnitTextureItem.h \
     textures/TerrainTextureItem.h \
-    action/UserActionHypervisor.h
+    action/UserActionHypervisor.h \
+    stuff/abstractions.h
 FORMS +=
 
 RESOURCES += \

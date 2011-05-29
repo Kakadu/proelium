@@ -14,6 +14,7 @@
 #include "textures/UnitTextureItem.h"
 #include "textures/TerrainTextureItem.h"
 #include "action/UserActionHypervisor.h"
+#include "stuff/abstractions.h"
 
 const QColor& MapDrawer::grayColor = QColor(255,0,255);
 extern UserActionHyperVisor* MainHyperVisor;

@@ -12,14 +12,14 @@
 #include <QMessageBox>
 #include "reshelpers/rescontainer.h"
 #include "action/action.h"
-#include "reshelpers/gametextureitem.h"
 #include "GameMap.h"
 #include "reshelpers/resloader1.h"
 #include "reshelpers/anigroup.h"
 #include "GlobalConst.h"
-#include <textures/UnitTextureItem.h>
+#include "textures/UnitTextureItem.h"
+#include "stuff/abstractions.h"
 
-class MapDrawer : public QObject, public UnitVisitor {
+class MapDrawer : public QObject, public UnitVisitor, public AbstractDrawer {
     Q_OBJECT
 private:
     int LEFT_OFFSET, TOP_OFFSET;

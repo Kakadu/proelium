@@ -5,6 +5,16 @@
 #include <QObject>
 #include "mapsquare.h"
 
+namespace Game {
+    enum Direction {
+        Dir_SW = 1,
+        Dir_S, Dir_SE,
+        Dir_W = 4,
+        Dir_E = 6,
+        Dir_NW, Dir_N, Dir_NE
+    };
+}
+
 class GameMap : public QObject {
     Q_OBJECT
 private:
@@ -43,9 +53,11 @@ public:
 	}
 	return NULL;
     }
-    int nextId() {
+    int inline nextId() {
         return _lastId++;
     }
+    bool f() { return false; }
+    bool tryMove(Unit*, Game::Direction);
 signals:
     void unitRemoved(int);
 

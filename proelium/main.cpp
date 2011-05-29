@@ -37,7 +37,8 @@ int main(int argc, char *argv[])
     MapDrawer drawer(scene, &map);
     drawer.paintField();
     drawer.repaint();
-
+    MainHyperVisor = new UserActionHyperVisor(&map);
+    MainHyperVisor->setDrawer(&drawer);
     view.show();
     return a.exec();
 }

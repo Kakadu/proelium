@@ -7,6 +7,6 @@
         <file>artillery/ArtilleryAttackA_W.png</file>
         <file>tank_att/TankAttackA_E.png</file>
         <file>tank_death/TankDeath_E.png</file>
-        <file>main_terrain.png</file>
+        <file alias="main_terrain">resources/main_terrain.png</file>
     </qresource>
 </RCC>

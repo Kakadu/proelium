@@ -29,7 +29,7 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
 	int x;
 	TerrainPack *p = new TerrainPack;
 	ResLoader1::load1(p->content,_imageHeight,_imageWidth,
-                          ":/main_terrain.png",9,9,grayColor);
+                          ":/main_terrain",9,9,grayColor);
 	Sprites.insert(tr("main_terrain"),p);
 	_imageHeight = p->content.at(0).height();
 	_imageWidth =  p->content.at(0).width();

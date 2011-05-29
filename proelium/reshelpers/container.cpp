@@ -4,4 +4,5 @@
 QMap<QString, SpritesPack*> Sprites;
 UserActionHyperVisor* MainHyperVisor;
 
-
+int* aaa;
+QVector<QString> dirHelper;

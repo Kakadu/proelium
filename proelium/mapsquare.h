@@ -2,8 +2,8 @@
 #define MAPSQUARE_H
 
 #include <QObject>
-#include "unit.h"
 #include <QList>
+#include "unit.h"
 
 class MapSquare : public QObject
 {
@@ -11,7 +11,6 @@ Q_OBJECT
 private:
     int _terrainSpriteIndex;
     int _resourceSpriteIndex;   // one square can have only 1 resource;
-
 
 public:
     explicit MapSquare();

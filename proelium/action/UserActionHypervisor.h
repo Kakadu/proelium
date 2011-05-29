@@ -5,6 +5,9 @@
 #include "GameMap.h"
 #include "unit.h"
 #include "stuff/abstractions.h"
+#include "stuff/consts.h"
+
+extern QVector<QString> dirHelper;
 
 /**
  * This class will dispatch user keyboard and mouse actions to game model

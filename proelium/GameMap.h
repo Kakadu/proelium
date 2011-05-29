@@ -1,19 +1,12 @@
 #ifndef MAP_H
 #define MAP_H
-#include <QVector>
-#include <QVector2D>
+
 #include <QObject>
 #include "mapsquare.h"
+//#include "stuff/consts2.h"
+#include "stuff/consts.h"
 
-namespace Game {
-    enum Direction {
-        Dir_SW = 1,
-        Dir_S, Dir_SE,
-        Dir_W = 4,
-        Dir_E = 6,
-        Dir_NW, Dir_N, Dir_NE
-    };
-}
+#pragma once
 
 class GameMap : public QObject {
     Q_OBJECT
@@ -60,7 +53,6 @@ public:
     bool tryMove(Unit*, Game::Direction);
 signals:
     void unitRemoved(int);
-
 };
 
 #endif // MAP_H

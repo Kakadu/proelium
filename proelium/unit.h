@@ -6,6 +6,7 @@
 #include <QtCore>
 #include <QTimer>
 #include <iostream>
+#include "stuff/consts.h"
 
 typedef int IDT;
 
@@ -13,6 +14,7 @@ class Unit : public QObject  {
     Q_OBJECT
     //Q_PROPERTY(int attackFrame WRITE setAttackFrame READ attackFrame);
 private:
+    Game::Direction _lastDir;
     FrameCollection* _attackFrames;
     FrameCollection* _deathFrames;
     FrameCollection* _moveFrames[8];
@@ -25,6 +27,9 @@ private:
 public:
     IDT id;
     QString name;
+    Game::Direction lastDir() { return _lastDir; }
+    void setLastDir(Game::Direction d) { _lastDir = d; }
+
     inline int allPath() { return _allPath; }
     inline int nonEvaledPath() { return _nonEvaledPath; }
     inline void incrPath(int x) {
@@ -49,6 +54,7 @@ public:
 	name = _name;
 	id = _id;
         is_alive = true;
+        _lastDir = Game::Dir_S;
     }
 
 };

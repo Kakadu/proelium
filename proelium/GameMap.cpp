@@ -1,6 +1,6 @@
 #include "GameMap.h"
 #include "mapsquare.h"
-#include "stuff/consts.h"
+#include "stuff/consts2.h"
 
 GameMap::GameMap(int w, int h,QObject *parent) : QObject(parent) {
     _lastId = 0;
@@ -52,7 +52,7 @@ void GameMap::init() {
 
 MapSquare* GameMap::getSquare1(int i,int j) {
     int s = _width + _height +2;
-    if (i >= s || j >= s)
+    if (i<0 || j<0 || i >= s || j >= s)
 	return NULL;
     return _field[i][j];
 }
@@ -65,13 +65,14 @@ bool GameMap::tryMove(Unit *u, Game::Direction dir) {
         return false;
     }
 
-    int x = i+directions[dir].first;
-    int y = j+directions[dir].second;
+    int x = i + directions[dir].first;
+    int y = j + directions[dir].second;
     MapSquare* dst = getSquare1(x, y);
     if (dst == NULL)
         return false;
 
     src->removeUnit(u);
     dst->addUnit(u);
+    u->setLastDir(dir);
     return true;
 }

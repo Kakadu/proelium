@@ -14,8 +14,6 @@
 #include "action/action.h"
 #include "GameMap.h"
 #include "reshelpers/resloader1.h"
-#include "reshelpers/anigroup.h"
-#include "GlobalConst.h"
 #include "textures/UnitTextureItem.h"
 #include "stuff/abstractions.h"
 
@@ -29,13 +27,13 @@ private:
     int _imageWidth, _imageHeight;
     static const QColor& grayColor;
     QPoint screenCoords(int,int);
-    AniGroup* aniGroup;
+    //AniGroup* aniGroup;
 
 public:
     MapDrawer(QGraphicsScene* sc, GameMap* m);
     void repaint();
     void paintField();
-    void placeArmies(ModelParam*);
+    //void placeArmies(ModelParam*);
 
     virtual void visit(NewUnitsAppearedAction&) {
         qDebug() << "NewUnitsAppearedAction";
@@ -111,12 +109,12 @@ public slots:
 	delete u;
     }
     void endVisiting() {
-	aniGroup->clear();
+        //aniGroup->clear();
 	wakeUpModel();	
     }
-    void setDeathPixmap(GameTextureItem* item) {
-	item->setDeathSprite();
-    }
+    //void setDeathPixmap(GameTextureItem* item) {
+//	item->setDeathSprite();
+  //  }
 private slots:
     void wakeUpModel() {
 	emit continueModel();

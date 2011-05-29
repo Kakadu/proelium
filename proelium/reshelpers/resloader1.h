@@ -10,6 +10,7 @@ Q_OBJECT
 public:
     static void load1(QVector<QPixmap>&, int&, int&, QString,int,int, QColor);
     static QVector<QPixmap>* load2(QString,int,int, QColor);
+    static void load3(QVector<QPixmap> &, QString, int, int , QColor);
 };
 
 #endif // RESLOADER1_H

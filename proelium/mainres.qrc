@@ -9,4 +9,30 @@
         <file>tank_death/TankDeath_E.png</file>
         <file alias="main_terrain">resources/main_terrain.png</file>
     </qresource>
+    <qresource prefix="/Samurai">
+        <file alias="Death_NE">resources/Samurai/SamuraiDeath_NE.png</file>
+        <file alias="Death_W">resources/Samurai/SamuraiDeath_W.png</file>
+        <file alias="AttackA_S">resources/Samurai/SamuraiAttackA_S.png</file>
+        <file alias="AttackA_NW">resources/Samurai/SamuraiAttackA_NW.png</file>
+        <file alias="Death_S">resources/Samurai/SamuraiDeath_S.png</file>
+        <file alias="Run_N">resources/Samurai/SamuraiRun_N.png</file>
+        <file alias="Run_S">resources/Samurai/SamuraiRun_S.png</file>
+        <file alias="Run_SW">resources/Samurai/SamuraiRun_SW.png</file>
+        <file alias="Run_E">resources/Samurai/SamuraiRun_E.png</file>
+        <file alias="Death_E">resources/Samurai/SamuraiDeath_E.png</file>
+        <file alias="Run_W">resources/Samurai/SamuraiRun_W.png</file>
+        <file alias="AttackA_E">resources/Samurai/SamuraiAttackA_E.png</file>
+        <file alias="AttackA_NE">resources/Samurai/SamuraiAttackA_NE.png</file>
+        <file alias="AttackA_N">resources/Samurai/SamuraiAttackA_N.png</file>
+        <file alias="Death_SW">resources/Samurai/SamuraiDeath_SW.png</file>
+        <file alias="Death_SE">resources/Samurai/SamuraiDeath_SE.png</file>
+        <file alias="Run_NE">resources/Samurai/SamuraiRun_NE.png</file>
+        <file alias="AttackA_SE">resources/Samurai/SamuraiAttackA_SE.png</file>
+        <file alias="Death_N">resources/Samurai/SamuraiDeath_N.png</file>
+        <file alias="Death_NW">resources/Samurai/SamuraiDeath_NW.png</file>
+        <file alias="AttackA_W">resources/Samurai/SamuraiAttackA_W.png</file>
+        <file alias="Run_NW">resources/Samurai/SamuraiRun_NW.png</file>
+        <file alias="Run_SE">resources/Samurai/SamuraiRun_SE.png</file>
+        <file alias="AttackA_SW">resources/Samurai/SamuraiAttackA_SW.png</file>
+    </qresource>
 </RCC>

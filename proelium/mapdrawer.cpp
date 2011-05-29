@@ -1,39 +1,35 @@
 #include <QDebug>
 #include <QPoint>
 #include <QGraphicsScene>
-#include "mapdrawer.h"
-#include "GameMap.h"
 #include <QGraphicsPixmapItem>
-#include "reshelpers/resloader1.h"
 #include <QPixmap>
 #include <QVector>
-#include <reshelpers/rescontainer.h>
-#include "reshelpers/gametextureitem.h"
+#include "reshelpers/resloader1.h"
 #include "reshelpers/rescontainer.h"
-#include "GlobalConst.h"
+#include "reshelpers/rescontainer.h"
 #include "textures/UnitTextureItem.h"
 #include "textures/TerrainTextureItem.h"
 #include "action/UserActionHypervisor.h"
 #include "stuff/abstractions.h"
+#include "mapdrawer.h"
+#include "GameMap.h"
 
 const QColor& MapDrawer::grayColor = QColor(255,0,255);
 extern UserActionHyperVisor* MainHyperVisor;
+extern QMap<QString, SpritesPack*> Sprites;
+extern QVector<QString> dirHelper;
 
 MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
     LEFT_OFFSET = TOP_OFFSET = 5;
-    aniGroup = new AniGroup(this);
-    QObject::connect(aniGroup,SIGNAL(finished()),
-		     this,SLOT(endVisiting()));
 
     if (Sprites.count() == 0) {
-	int x;
 	TerrainPack *p = new TerrainPack;
 	ResLoader1::load1(p->content,_imageHeight,_imageWidth,
                           ":/main_terrain",9,9,grayColor);
 	Sprites.insert(tr("main_terrain"),p);
 	_imageHeight = p->content.at(0).height();
 	_imageWidth =  p->content.at(0).width();
-
+        /*
 	UnitPack* tanks = new UnitPack;
 	ResLoader1::load1(tanks->attack,x,x,
                           ":/tank_att/TankAttackA_E.png",20,1,QColor(192,192,192) );
@@ -42,7 +38,7 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
 	ResLoader1::load1(tanks->death,x,x,
                           ":/tank_death/TankDeath_E.png",15,1,QColor(192,192,192) );
 	tanks->normal = tanks->attack;
-	Sprites.insert(tr("tank"),tanks);
+        Sprites.insert(tr("tank"),tanks);*/
 	/*int c=0;
 	foreach(const QPixmap p, tanks->move) {
 	    if (p.isNull()) {
@@ -52,6 +48,7 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
 	}*/
 
 	//TODO: load new resources in future
+        /*
 	UnitPack* d30 = new UnitPack;
 	ResLoader1::load1(d30->attack,x,x,
                         ":/artillery/ArtilleryAttackA_W.png",12,1,QColor(192,192,192) );
@@ -60,21 +57,37 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
 
 	d30->normal = d30->attack;
 	Sprites.insert(tr("d30"),d30);
+        */
 
-	//TODO: load new resources in future
-	UnitPack* pturs = new UnitPack;
-	ResLoader1::load1(pturs->attack,x,x,
+        UnitPack* samurai = new UnitPack;
+        for (int i=1; (i<10); ++i) {
+            if (i==5)
+                continue;
+            QString suffix = dirHelper[i];
+            Game::Direction d = (Game::Direction)i;
+            ResLoader1::load3(samurai->attack[d],
+                              ":/Samurai/AttackA_"+suffix, 15,1,QColor(192,192,192) );
+            ResLoader1::load3(samurai->move[d],
+                              ":/Samurai/Run_"+suffix, 10, 1, QColor(192,192,192) );
+            ResLoader1::load3(samurai->death[d],
+                              ":/Samurai/Death_"+suffix, 15,1,QColor(192,192,192) );
+
+        }
+        Sprites.insert(tr("Samurai"), samurai);
+
+        /*
+        UnitPack* pturs = new UnitPack;
+        ResLoader1::load1(pturs->attack,x,x,
                         ":/ptur/TOW_Infantry_Attack_W.png",15,1,QColor(192,192,192) );
-	ResLoader1::load1(pturs->death,x,x,
+        ResLoader1::load1(pturs->death,x,x,
                         ":/ptur/TOW_Infantry_Death_W.png",15,1, QColor(192,192,192));
-	pturs->normal = pturs->attack;
-	Sprites.insert(tr("ptur"),pturs);
-
+        pturs->normal = pturs->attack;
+        Sprites.insert(tr("ptur"),pturs);
+        */
 
     }
     _map = m;
     _scene = sc;    
-
 }
 /**
   Получить по клетке в карте её экранные координаты.
@@ -124,11 +137,13 @@ void MapDrawer::repaint()  {
                     continue;
 
                 if (u->alive()) {
-                        QPixmap norm = pack->attack.at(0);
-                        item->setPixmap(norm);
-                        int w = norm.width(), h = norm.height();
-                        item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
-                                        terrLoc.y() - h/2 + _imageHeight/2);
+                    Game::Direction d = u->lastDir();
+                    qDebug() << pack->attack[d].count();
+                    QPixmap norm = pack->attack[d].at(0); // TODO: add default state
+                    item->setPixmap(norm);
+                    int w = norm.width(), h = norm.height();
+                    item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
+                                    terrLoc.y() - h/2 + _imageHeight/2);
                 } else {
                     // remove UnitTextureItem
                 }
@@ -159,11 +174,15 @@ void MapDrawer::repaint()  {
                 if (pack==NULL)
                     continue;
                 if (u->alive()) {
-                        QPixmap norm = pack->attack.at(0);
-                        item->setPixmap(norm);
-                        int w = norm.width(), h = norm.height();
-                        item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
-                                        terrLoc.y() - h/2 + _imageHeight/2);
+                    Game::Direction d = u->lastDir();
+                    QVector<QPixmap> temp =  pack->attack[d];
+                    qDebug() << pack->attack[d].count();
+                    QPixmap norm = temp.at(0);
+                    qDebug() << norm.isNull();
+                    item->setPixmap(norm);
+                    int w = norm.width(), h = norm.height();
+                    item->setOffset(terrLoc.x() - w/2 + _imageWidth/2,
+                                    terrLoc.y() - h/2 + _imageHeight/2);
                 } else {
                     // TODO: remove UnitTextureItem
                 }

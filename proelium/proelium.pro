@@ -11,9 +11,7 @@ SOURCES += main.cpp \
     reshelpers/resloader1.cpp \
     mapdrawer.cpp \
     reshelpers/rescontainer.cpp \
-    reshelpers/gametextureitem.cpp \
     reshelpers/container.cpp \
-    reshelpers/anigroup.cpp \
     stuff/abstractions.cpp
 HEADERS += \
     framecollection.h \
@@ -24,15 +22,14 @@ HEADERS += \
     mapdrawer.h \
     action/action.h \
     reshelpers/rescontainer.h \
-    reshelpers/gametextureitem.h \
-    reshelpers/anigroup.h \
     GlobalConst.h \
     textures/AbstractTextureItem.h \
     textures/UnitTextureItem.h \
     textures/TerrainTextureItem.h \
     action/UserActionHypervisor.h \
     stuff/abstractions.h \
-    stuff/consts.h
+    stuff/consts.h \
+    stuff/consts2.h
 FORMS +=
 
 RESOURCES += \

@@ -75,6 +75,8 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
 
         Sprites.insert(tr("Samurai"),
                        ResLoader1::addSprites(":/Samurai/Run_", 10, ":/Samurai/Death_", 15, ":/Samurai/AttackA_", 15));
+        Sprites.insert(tr("AfricanChampion"),
+                       ResLoader1::addSprites(":/AfricanChampion/Run_", 10, ":/AfricanChampion/Death_", 15, ":/AfricanChampion/Attack_", 15));
 
         /*
         UnitPack* pturs = new UnitPack;

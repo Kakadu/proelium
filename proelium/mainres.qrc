@@ -35,4 +35,30 @@
         <file alias="Run_SE">resources/Samurai/SamuraiRun_SE.png</file>
         <file alias="AttackA_SW">resources/Samurai/SamuraiAttackA_SW.png</file>
     </qresource>
+    <qresource prefix="/AfricanChampion">
+        <file alias="Run_SE">resources/AfricanChampion/AfricanChampionRun_SE.png</file>
+        <file alias="Run_N">resources/AfricanChampion/AfricanChampionRun_N.png</file>
+        <file alias="Attack_N">resources/AfricanChampion/AfricanChampionAttack_N.png</file>
+        <file alias="Attack_NW">resources/AfricanChampion/AfricanChampionAttack_NW.png</file>
+        <file alias="Death_S">resources/AfricanChampion/AfricanChampionDeath_S.png</file>
+        <file alias="Attack_E">resources/AfricanChampion/AfricanChampionAttack_E.png</file>
+        <file alias="Run_NW">resources/AfricanChampion/AfricanChampionRun_NW.png</file>
+        <file alias="Run_E">resources/AfricanChampion/AfricanChampionRun_E.png</file>
+        <file alias="Death_W">resources/AfricanChampion/AfricanChampionDeath_W.png</file>
+        <file alias="Death_NW">resources/AfricanChampion/AfricanChampionDeath_NW.png</file>
+        <file alias="Attack_W">resources/AfricanChampion/AfricanChampionAttack_W.png</file>
+        <file alias="Death_N">resources/AfricanChampion/AfricanChampionDeath_N.png</file>
+        <file alias="Attack_S">resources/AfricanChampion/AfricanChampionAttack_S.png</file>
+        <file alias="Run_W">resources/AfricanChampion/AfricanChampionRun_W.png</file>
+        <file alias="Death_NE">resources/AfricanChampion/AfricanChampionDeath_NE.png</file>
+        <file alias="Death_SE">resources/AfricanChampion/AfricanChampionDeath_SE.png</file>
+        <file alias="Death_SW">resources/AfricanChampion/AfricanChampionDeath_SW.png</file>
+        <file alias="Run_SW">resources/AfricanChampion/AfricanChampionRun_SW.png</file>
+        <file alias="Run_NE">resources/AfricanChampion/AfricanChampionRun_NE.png</file>
+        <file alias="Death_E">resources/AfricanChampion/AfricanChampionDeath_E.png</file>
+        <file alias="Attack_SW">resources/AfricanChampion/AfricanChampionAttack_SW.png</file>
+        <file alias="Attack_NE">resources/AfricanChampion/AfricanChampionAttack_NE.png</file>
+        <file alias="Run_S">resources/AfricanChampion/AfricanChampionRun_S.png</file>
+        <file alias="Attack_SE">resources/AfricanChampion/AfricanChampionAttack_SE.png</file>
+    </qresource>
 </RCC>

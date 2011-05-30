@@ -1,8 +1,7 @@
 #ifndef RESCONTAINER_H
 #define RESCONTAINER_H
-#include <QVector>
-#include <QtCore>
-#include <reshelpers/resloader1.h>
+
+#include <QPixmap>
 #include "stuff/consts.h"
 
 typedef QVector<QPixmap> Images;

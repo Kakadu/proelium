@@ -6,7 +6,6 @@
 #include <QVector>
 #include "reshelpers/resloader1.h"
 #include "reshelpers/rescontainer.h"
-#include "reshelpers/rescontainer.h"
 #include "textures/UnitTextureItem.h"
 #include "textures/TerrainTextureItem.h"
 #include "action/UserActionHypervisor.h"
@@ -58,7 +57,7 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
 	d30->normal = d30->attack;
 	Sprites.insert(tr("d30"),d30);
         */
-
+        /*
         UnitPack* samurai = new UnitPack;
         for (int i=1; (i<10); ++i) {
             if (i==5)
@@ -72,8 +71,10 @@ MapDrawer::MapDrawer(QGraphicsScene* sc, GameMap* m) {
             ResLoader1::load3(samurai->death[d],
                               ":/Samurai/Death_"+suffix, 15,1,QColor(192,192,192) );
 
-        }
-        Sprites.insert(tr("Samurai"), samurai);
+        } */
+
+        Sprites.insert(tr("Samurai"),
+                       ResLoader1::addSprites(":/Samurai/Run_", 10, ":/Samurai/Death_", 15, ":/Samurai/AttackA_", 15));
 
         /*
         UnitPack* pturs = new UnitPack;

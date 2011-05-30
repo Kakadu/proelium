@@ -3,6 +3,28 @@
 #include <QBitmap>
 #include <QDebug>
 
+extern QVector<QString> dirHelper;
+
+UnitPack* ResLoader1::addSprites(QString prefixRun, int runN,
+                                 QString prefixDeath, int deathN,
+                                 QString prefixAttack, int attackN) {
+    UnitPack* p = new UnitPack;
+    for (int i=1; (i<10); ++i) {
+        if (i==5)
+            continue;
+        QString suffix = dirHelper[i];
+        Game::Direction d = (Game::Direction)i;
+        ResLoader1::load3(p->attack[d],
+                          prefixAttack+suffix, deathN,1,QColor(192,192,192) );
+        ResLoader1::load3(p->move[d],
+                          prefixRun+suffix, runN, 1, QColor(192,192,192) );
+        ResLoader1::load3(p->death[d],
+                          prefixDeath+suffix, attackN,1,QColor(192,192,192) );
+
+    }
+    return p;
+}
+
 void ResLoader1::load1(QVector<QPixmap> &ans, int& height, int& width, QString path, int hcount, int vcount, QColor c) {
     QPixmap src(path);
     width = src.width() / hcount;

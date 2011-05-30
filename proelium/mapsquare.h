@@ -21,6 +21,7 @@ public:
     int reousrceIndex() { return _resourceSpriteIndex; }
     void addUnit(Unit*);
     void removeUnit(Unit*);
+
 signals:
 
 public slots:

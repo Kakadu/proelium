@@ -1,6 +1,7 @@
 #include "GameMap.h"
 #include "mapsquare.h"
 #include "stuff/consts2.h"
+#include <algorithm>
 
 GameMap::GameMap(int w, int h,QObject *parent) : QObject(parent) {
     _lastId = 0;
@@ -57,22 +58,34 @@ MapSquare* GameMap::getSquare1(int i,int j) {
     return _field[i][j];
 }
 
-bool GameMap::tryMove(Unit *u, Game::Direction dir) {
+Move::MoveResult* GameMap::tryMove(Unit *u, Game::Direction dir) {
     int i,j;
     MapSquare* src = locateUnit(i,j,u);
     if (src == NULL) {
-        qDebug() << "can't move: mapsquare not found";
-        return false;
+        qDebug() << "can't move: mapsquare not found";        
+        return new Move::NoMove;
     }
 
     int x = i + directions[dir].first;
     int y = j + directions[dir].second;
     MapSquare* dst = getSquare1(x, y);
-    if (dst == NULL)
-        return false;
+    if (dst == NULL) {
+        return new Move::NoMove;
+    }
+    auto func = [u](Unit* u2) -> bool {
+        return (u->ownerId != u2->ownerId);
+    };
+    auto ans = std::find_if(dst->units.begin(), dst->units.end(),
+                           func);
 
-    src->removeUnit(u);
-    dst->addUnit(u);
     u->setLastDir(dir);
-    return true;
+    if (ans == dst->units.end()) {
+        // not found
+        src->removeUnit(u);
+        dst->addUnit(u);
+        return new Move::SimpleMove();
+    } else {
+
+        return new Move::FightMove(u, *ans, false);
+    }
 }

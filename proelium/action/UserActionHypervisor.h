@@ -12,7 +12,7 @@ extern QVector<QString> dirHelper;
 /**
  * This class will dispatch user keyboard and mouse actions to game model
  */
-class UserActionHyperVisor : public QObject
+class UserActionHyperVisor : public QObject, public Move::MoveVisitor
 {
     Q_OBJECT
 private:
@@ -37,14 +37,22 @@ public:
             int dir = curkey - 0x30;
 
             Game::Direction d = (Game::Direction)dir;
-            if (_map->tryMove(_curUnit, d)) {
-                qDebug() << "call repaint";
-                _drawer->repaint();
-            }
+            Move::MoveResult* ans = _map->tryMove(_curUnit, d);
+            ans->accept(*this);
         }
-
     }
     virtual ~UserActionHyperVisor() {}
+
+    virtual void visit(Move::FightMove &) {
+        qDebug() << "fight!";
+    }
+    virtual void visit(Move::SimpleMove &) {
+        qDebug() << "move!";
+        _drawer->repaint();
+    }
+    virtual void visit(Move::NoMove &) {
+        qDebug() << "no move!";
+    }
 };
 
 #endif // USERACTIONHYPERVISOR_H

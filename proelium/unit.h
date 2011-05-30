@@ -25,8 +25,10 @@ private:
     int _nonEvaledPath;
     bool is_alive;
 public:
-    IDT id;
+    int id;
     QString name;
+    int ownerId;
+
     Game::Direction lastDir() { return _lastDir; }
     void setLastDir(Game::Direction d) { _lastDir = d; }
 
@@ -42,7 +44,7 @@ public:
     }
 
     Unit& operator=(const Unit& u) {
-	Unit* a = new Unit(u.name, u.id);
+        Unit* a = new Unit(u.name, u.id, u.ownerId);
 	return *a;
     }
     bool alive (void) {return is_alive;}
@@ -50,9 +52,10 @@ public:
         is_alive = b;
     }
 
-    explicit Unit(QString _name, int _id, QObject* parent = NULL) : QObject(parent) {
+    explicit Unit(QString _name, int _id, int _ownerId, QObject* parent = NULL) : QObject(parent) {
 	name = _name;
-	id = _id;
+        id = _id;
+        ownerId = _ownerId;
         is_alive = true;
         _lastDir = Game::Dir_S;
     }

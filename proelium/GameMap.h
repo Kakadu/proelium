@@ -3,10 +3,51 @@
 
 #include <QObject>
 #include "mapsquare.h"
-//#include "stuff/consts2.h"
 #include "stuff/consts.h"
 
-#pragma once
+namespace Move {
+    class SimpleMove;
+    class NoMove;
+    class FightMove;
+    class MoveVisitor {
+    public:
+        virtual void visit(SimpleMove&)=0;
+        virtual void visit(FightMove&)=0;
+        virtual void visit(NoMove&)=0;
+    };
+
+    class MoveResult {
+    //private:
+    //    MoveResult() {} // abstract class =)
+    public:
+        virtual void accept(MoveVisitor&)=0;
+    };
+    class SimpleMove: public MoveResult {
+    public:
+        SimpleMove(){}
+        virtual void accept(MoveVisitor &v) { v.visit(*this); }
+    };
+
+    class NoMove: public MoveResult {
+    public:
+        NoMove() {}
+        NoMove(const NoMove&) { }
+        virtual void accept(MoveVisitor &v) { v.visit(*this); }
+    };
+    class FightMove: public MoveResult {
+    public:
+        Unit *attacker, *defender;
+        bool attackerWon;
+        FightMove(Unit *a, Unit *b,bool r): attacker(a), defender(b),
+            attackerWon(r) {}
+        FightMove(const FightMove& m) {
+            attacker = m.attacker;
+            defender = m.defender;
+            attackerWon = m.attackerWon;
+        }
+        virtual void accept(MoveVisitor &v) { v.visit(*this); }
+    };
+}
 
 class GameMap : public QObject {
     Q_OBJECT
@@ -50,7 +91,7 @@ public:
         return _lastId++;
     }
     bool f() { return false; }
-    bool tryMove(Unit*, Game::Direction);
+    Move::MoveResult *tryMove(Unit*, Game::Direction);
 signals:
     void unitRemoved(int);
 };

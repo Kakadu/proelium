@@ -2,7 +2,7 @@
 #define ACTION_H
 #include <QObject>
 #include "unit.h"
-
+/*
 class FireUnitAction;
 class MoveUnitAction;
 class NoAction;
@@ -34,21 +34,21 @@ public:
     int xOld() { return _xOld; }
     int yOld() { return _yOld; }
 
-    MoveUnitAction(int xo, int yo, int x, int y,Unit* u)
+	MoveUnitAction(int xo, int yo, int x, int y,Unit* u)
 	: _xOld(xo), _yOld(yo), _x(x),_y(y),_u(u) {}
-    MoveUnitAction(MoveUnitAction& act) {
+	MoveUnitAction(MoveUnitAction& act) {
 	_u = act.unit();
 	_x = act.x();
 	_y = act.y();
 	_xOld = act.xOld();
 	_yOld = act.yOld();
-    }
+	}
 
-    virtual void accept(UnitVisitor &v) {
+	virtual void accept(UnitVisitor &v) {
 	v.visit(*this);
-    }
+	}
 };
-class FireUnitAction : public AbstractUnitAction {    
+class FireUnitAction : public AbstractUnitAction {
 public:
     const int attackerID;
     const int victimID;
@@ -56,12 +56,12 @@ public:
     QString victimName;
     const bool result; // true if killed
     FireUnitAction(int id, QString aName, int tid, QString vName, bool r) :
-	    attackerID(id), victimID(tid),
-	    attackerName(aName), victimName(vName), result(r) {}
+        attackerID(id), victimID(tid),
+        attackerName(aName), victimName(vName), result(r) {}
 
-    virtual void accept(UnitVisitor &v) {
+	virtual void accept(UnitVisitor &v) {
 	v.visit(*this);
-    }
+	}
 };
 
 class EndWarAction : public AbstractUnitAction {
@@ -69,7 +69,7 @@ public:
     QString message;
     EndWarAction(QString msg) : message(msg) {}
     virtual void accept(UnitVisitor &v) {
-	v.visit(*this);
+    v.visit(*this);
     }
 };
 
@@ -77,7 +77,7 @@ class NewUnitsAppearedAction : public AbstractUnitAction {
 public:
     NewUnitsAppearedAction() {}
     virtual void accept(UnitVisitor &v) {
-	v.visit(*this);
+    v.visit(*this);
     }
 };
 
@@ -85,8 +85,8 @@ class NoAction : public AbstractUnitAction {
 public:
     NoAction() {}
     virtual void accept(UnitVisitor &v) {
-	v.visit(*this);
+    v.visit(*this);
     }
 };
-
+*/
 #endif // ACTION_H

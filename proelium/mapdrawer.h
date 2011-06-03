@@ -16,8 +16,9 @@
 #include "reshelpers/resloader1.h"
 #include "textures/UnitTextureItem.h"
 #include "stuff/abstractions.h"
+#include "textures/TerrainTextureItem.h"
 
-class MapDrawer : public QObject, public UnitVisitor, public AbstractDrawer {
+class MapDrawer : public QObject, public AbstractDrawer {
     Q_OBJECT
 private:
     int LEFT_OFFSET, TOP_OFFSET;
@@ -27,98 +28,95 @@ private:
     int _imageWidth, _imageHeight;
     static const QColor& grayColor;
     QPoint screenCoords(int,int);
-    //AniGroup* aniGroup;
-
+    TerrainTextureItem* cursorT;
+    void evalCoords(int i,int j,int &x, int &y); // TODO: mark static
 public:
     MapDrawer(QGraphicsScene* sc, GameMap* m);
     void repaint();
     void paintField();
-    //void placeArmies(ModelParam*);
+    void showCursorSprite(const int &i, const int &j);
+    bool check_squares(int i, int j, int x, int y);
 
-    virtual void visit(NewUnitsAppearedAction&) {
+
+    /*virtual void visit(NewUnitsAppearedAction&) {
         qDebug() << "NewUnitsAppearedAction";
-	repaint();
-	endVisiting();
-    }
-
+        repaint();
+        endVisiting();
+    }*/
+    /*
     virtual void visit(FireUnitAction& ) {
-/*          qDebug() << "FireUnitAction";
-	QString res = act.result ? "killed" : "fired";
-	qDebug() << act.attackerID << " " << res << " " << act.victimID;
+          qDebug() << "FireUnitAction";
+    QString res = act.result ? "killed" : "fired";
+    qDebug() << act.attackerID << " " << res << " " << act.victimID;
 
 	GameTextureItem *itemFire = NULL, *itemDeath = NULL;
 	aniGroup->clear();
 	if (unitGraphics.contains(act.attackerID))
-	    itemFire = unitGraphics.value(act.attackerID);
+		itemFire = unitGraphics.value(act.attackerID);
 	Q_ASSERT(itemFire != NULL);
 	aniGroup->addAnimationSeq(itemFire->animate(act));
 	RemoveTimer* timer = NULL;
 
 	if (act.result) {
-	    // victim can still alive
-	    if (unitGraphics.contains(act.victimID))
+		// victim can still alive
+		if (unitGraphics.contains(act.victimID))
 		itemDeath = unitGraphics.value(act.victimID);
-	    Q_ASSERT(itemDeath != NULL);
-	    aniGroup->addAnimationSeq(itemDeath->animateDeath(act.victimName));
+		Q_ASSERT(itemDeath != NULL);
+		aniGroup->addAnimationSeq(itemDeath->animateDeath(act.victimName));
 
-	    timer = new RemoveTimer(this,itemDeath);
-	    QObject::connect(timer, SIGNAL(timeout2(GameTextureItem*)),
-			     this, SLOT(setDeathPixmap(GameTextureItem*)));
+		timer = new RemoveTimer(this,itemDeath);
+		QObject::connect(timer, SIGNAL(timeout2(GameTextureItem*)),
+				 this, SLOT(setDeathPixmap(GameTextureItem*)));
 	}
-        aniGroup->startSeq(timer); */
-    }
+		aniGroup->startSeq(timer);
+	}
 
     virtual void visit(MoveUnitAction& ) {
-/*        qDebug() << "MoveUnitAction";
-	qDebug() << act.unit()->id << " moves";
-	GameTextureItem* item;
-	if (unitGraphics.contains(act.unit()->id)) {
-	    item = unitGraphics.value(act.unit()->id);
-	    QPoint newCoords = screenCoords(act.x(), act.y());
-	    item->animate(act,-1,_map,newCoords);
-	    aniGroup->addAnimationPar(item->animationGroup());
-	    aniGroup->startPar(NULL);
-	}else {
-	    qDebug() << "Unit with id " << act.unit()->id << "not found. continue";
-	    endVisiting();
-	}
-        */
+        qDebug() << "MoveUnitAction";
+    qDebug() << act.unit()->id << " moves";
+    GameTextureItem* item;
+    if (unitGraphics.contains(act.unit()->id)) {
+        item = unitGraphics.value(act.unit()->id);
+        QPoint newCoords = screenCoords(act.x(), act.y());
+        item->animate(act,-1,_map,newCoords);
+        aniGroup->addAnimationPar(item->animationGroup());
+        aniGroup->startPar(NULL);
+    }else {
+        qDebug() << "Unit with id " << act.unit()->id << "not found. continue";
+        endVisiting();
     }
 
-    virtual void visit(EndWarAction& act) {
+	}
+	virtual void visit(EndWarAction& act) {
 	QMessageBox msg;
 	msg.setText(act.message);
 
 	msg.exec();
 	qDebug() << "War never ends.";
-    }
-    virtual void visit(NoAction&) {
-        qDebug() << "NoAction";
-        wakeUpModel();
-    }
+	}
+	virtual void visit(NoAction&) {
+		qDebug() << "NoAction";
+		wakeUpModel();
+	}*/
 
 signals:
-    void continueModel();
+	void continueModel();
 
 public slots:
-    void removeUnit(const int x) {
-	unitGraphics.remove(x);
-    }
-    void applyAction(AbstractUnitAction* u) {
-	u->accept(*this);
-	delete u;
-    }
-    void endVisiting() {
-        //aniGroup->clear();
-	wakeUpModel();	
-    }
-    //void setDeathPixmap(GameTextureItem* item) {
+	void removeUnit(const int x) {
+		unitGraphics.remove(x);
+	}
+	void endVisiting() {
+		//aniGroup->clear();
+		wakeUpModel();
+	}
+	//void setDeathPixmap(GameTextureItem* item) {
 //	item->setDeathSprite();
   //  }
 private slots:
-    void wakeUpModel() {
-	emit continueModel();
-    }
+	void wakeUpModel() {
+		emit continueModel();
+	}
 };
 
 #endif // MAPDRAWER_H

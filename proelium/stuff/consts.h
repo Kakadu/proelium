@@ -16,4 +16,6 @@ namespace Game {
     };
 
 }
+
+
 #endif // CONSTS_H

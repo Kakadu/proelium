@@ -5,14 +5,15 @@ QT += opengl qt3support
 TARGET = proelium
 TEMPLATE = app
 SOURCES += main.cpp \
-    framecollection.cpp \    
+    framecollection.cpp \
     GameMap.cpp \
     mapsquare.cpp \
     reshelpers/resloader1.cpp \
     mapdrawer.cpp \
     reshelpers/rescontainer.cpp \
     reshelpers/container.cpp \
-    stuff/abstractions.cpp
+    stuff/abstractions.cpp \
+    forms/mainwindow.cpp
 HEADERS += \
     framecollection.h \
     unit.h \
@@ -29,10 +30,13 @@ HEADERS += \
     action/UserActionHypervisor.h \
     stuff/abstractions.h \
     stuff/consts.h \
-    stuff/consts2.h
-FORMS +=
+    stuff/consts2.h \
+    forms/mainwindow.h
+FORMS += \
+    forms/mainwindow.ui
 
 RESOURCES += \
     mainres.qrc
 
-QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_CXXFLAGS += -std=c++0x -Woverloaded-virtual  \
+#-Wold-style-cast -Wfloat-equal -Wshadow

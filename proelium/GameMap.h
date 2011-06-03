@@ -17,36 +17,54 @@ namespace Move {
     };
 
     class MoveResult {
-    //private:
-    //    MoveResult() {} // abstract class =)
     public:
         virtual void accept(MoveVisitor&)=0;
+        int targetX, targetY;
+        Unit *attacker;
+        MoveResult(int x,int y,Unit *a) : targetX(x), targetY(y), attacker(a) {}
     };
     class SimpleMove: public MoveResult {
     public:
-        SimpleMove(){}
+        SimpleMove(int x, int y, Unit *a): MoveResult(x,y,a) { }
         virtual void accept(MoveVisitor &v) { v.visit(*this); }
     };
 
     class NoMove: public MoveResult {
     public:
-        NoMove() {}
-        NoMove(const NoMove&) { }
+        NoMove(int x=-1,int y=-1,Unit*a=NULL) : MoveResult(x,y,NULL) { }
         virtual void accept(MoveVisitor &v) { v.visit(*this); }
     };
     class FightMove: public MoveResult {
     public:
-        Unit *attacker, *defender;
+        Unit *defender;
         bool attackerWon;
-        FightMove(Unit *a, Unit *b,bool r): attacker(a), defender(b),
-            attackerWon(r) {}
-        FightMove(const FightMove& m) {
-            attacker = m.attacker;
+        MapSquare* defSquare;
+
+        FightMove(Unit *att, Unit *def, bool result, int defx=-1, int defy=-1,
+                  MapSquare* defsq=NULL)
+            : MoveResult(defx,defy,att), defender(def),
+            attackerWon(result), defSquare(defsq) {}
+
+        FightMove(const FightMove& m) : MoveResult(m.targetX,m.targetY,m.attacker) {
             defender = m.defender;
             attackerWon = m.attackerWon;
+            defSquare = m.defSquare;
+            targetX = m.targetX;
+            targetY = m.targetY;
         }
         virtual void accept(MoveVisitor &v) { v.visit(*this); }
     };
+}
+
+#define FORALL_UNITS(code) {\
+	MapSquare* sq;\
+	for (int i=0; i<s(); ++i)\
+		for (int j=0; j<s(); ++j) {\
+			if ((sq = _field[i][j]) != NULL)\
+			foreach (Unit* u, sq->units) {\
+				code\
+			}\
+	}\
 }
 
 class GameMap : public QObject {
@@ -64,36 +82,41 @@ public:
     inline int height() { return _height; }
     void init();
 
-    MapSquare* locateUnit(int& i, int& j, Unit* uu) {
-	MapSquare* sq;
-	for (i=0; i<s(); ++i)
-	    for (j=0; j<s(); ++j) {
-	    if ((sq = _field[i][j]) != NULL)
-		foreach (Unit* u, sq->units)
-		    if (u->id == uu->id)
-			return sq;
+	MapSquare* locateUnit(int& i, int& j, Unit* uu) {
+		MapSquare* sq;
+		for (i=0; i<s(); ++i)
+			for (j=0; j<s(); ++j) {
+				if ((sq = _field[i][j]) != NULL)
+				foreach (Unit* u, sq->units)
+					if (u->id == uu->id)
+					return sq;
+		}
+		return NULL;
 	}
-	return NULL;
-    }
 
-    Unit* findUnit(int id) {
-	MapSquare* sq;
-	for (int i=0; i<s(); ++i)
-	    for (int j=0; j<s(); ++j) {
-	    if ((sq = _field[i][j]) != NULL)
-		foreach (Unit* u, sq->units)
-		    if (u->id == id)
-			return u;
+	void visitUnits(UnitVisitor &v) {
+		FORALL_UNITS(v.visit(u);)
 	}
-	return NULL;
-    }
-    int inline nextId() {
-        return _lastId++;
-    }
-    bool f() { return false; }
-    Move::MoveResult *tryMove(Unit*, Game::Direction);
+
+	Unit* findUnit(int id) {
+		MapSquare* sq;
+		for (int i=0; i<s(); ++i)
+		for (int j=0; j<s(); ++j) {
+			if ((sq = _field[i][j]) == NULL)
+				continue;
+			foreach (Unit* u, sq->units)
+				if (u->id == id)
+					return u;
+		}
+		return NULL;
+	}
+	int inline nextId() {
+		return _lastId++;
+	}
+	bool f() { return false; }
+	Move::MoveResult *tryMove(Unit*, Game::Direction);
 signals:
-    void unitRemoved(int);
+	void unitRemoved(int);
 };
 
 #endif // MAP_H

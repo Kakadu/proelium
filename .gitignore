@@ -5,4 +5,5 @@ qrc_*.cpp
 *.pcx
 *.pal
 *.user
+.kdev4
 

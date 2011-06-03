@@ -8,6 +8,7 @@
         <file>tank_att/TankAttackA_E.png</file>
         <file>tank_death/TankDeath_E.png</file>
         <file alias="main_terrain">resources/main_terrain.png</file>
+        <file alias="cursor">resources/Cursor_SW.png</file>
     </qresource>
     <qresource prefix="/Samurai">
         <file alias="Death_NE">resources/Samurai/SamuraiDeath_NE.png</file>

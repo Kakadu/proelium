@@ -175,13 +175,9 @@ void MapDrawer::placeArmies(ModelParam *param) {
   Отрисовка рельефа.
   */
 void MapDrawer::paintField() {
-	int hc = _map->height(), wc = _map->width(),
-	h = _imageHeight, w = _imageWidth,
-	left=5, top=5, s = hc+wc+2;
+    int hc = _map->height(), wc = _map->width(), s = hc+wc+2;
 
-    int k=0;
     SpritesPack* sp = Sprites["main_terrain"];
-
     TerrainPack* p = dynamic_cast<TerrainPack*>(sp);
     Images TerrainSprites = p->content;
 
@@ -258,29 +254,26 @@ void MapDrawer::paintField() {
 	for (int i=0; i<hc+2; ++i)
 		for (int j=0; j<wc+1; ++j) {
 			MapSquare* sq = _map->getSquare1(wc+i-j,j+i);
-			if (sq != NULL)  {
-				QPixmap map = TerrainSprites.at(sq->terrainSprite());
-				TerrainTextureItem* item = new TerrainTextureItem(_scene);
-				item->setPixmap(map);
-				QPoint loc = screenCoords(wc+i-j,j+i);
-				item->setOffset(loc.x(),loc.y());
-				k++;
+			if (sq == NULL)
+				continue;
+			QPixmap map = TerrainSprites.at(sq->terrainSprite());
+			auto item = new TerrainTextureItem(_scene, "main_terrain");
+			item->setPixmap(map);
+			QPoint loc = screenCoords(wc+i-j,j+i);
+			item->setOffset(loc.x(),loc.y());
 		}
-	}
 
     //large lines
-    left += w/2; top -= h/2;
     for (int i=0; i<hc+1; ++i)
     for (int j=0; j<wc+2; ++j) {
         MapSquare* sq = _map->getSquare1(wc+1+i-j,j+i);
-        if (sq!=NULL) {
+        if (sq==NULL)
+            continue;
         QPixmap map = TerrainSprites.at(sq->terrainSprite());
-                TerrainTextureItem* item = new TerrainTextureItem(_scene);
+        auto item = new TerrainTextureItem(_scene, "main_terrain");
         item->setPixmap(map);
         QPoint loc = screenCoords(wc+1+i-j,j+i);
         item->setOffset(loc.x(),loc.y());
-        k++;
-        }
     }
 }
 
@@ -327,9 +320,10 @@ void MapDrawer::showCursorSprite(const int &x, const int &y) {
     int i,j;
     evalCoords(x,y,i,j);
     if (cursorT == NULL) {
-        cursorT = new TerrainTextureItem(_scene);
+        cursorT = new TerrainTextureItem(_scene,"cursor");
         auto pack = dynamic_cast<TerrainPack*>(Sprites["cursor"]);
         cursorT->setPixmap(pack->content[0]);
+        cursorT->animate();
     }
     int w = cursorT->pixmap().width(),
         h = cursorT->pixmap().height();

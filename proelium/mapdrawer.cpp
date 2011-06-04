@@ -323,7 +323,8 @@ void MapDrawer::showCursorSprite(const int &x, const int &y) {
         cursorT = new TerrainTextureItem(_scene,"cursor");
         auto pack = dynamic_cast<TerrainPack*>(Sprites["cursor"]);
         cursorT->setPixmap(pack->content[0]);
-        cursorT->animate();
+        cursorT->setDuration(600);
+        cursorT->initAnimation();
     }
     int w = cursorT->pixmap().width(),
         h = cursorT->pixmap().height();

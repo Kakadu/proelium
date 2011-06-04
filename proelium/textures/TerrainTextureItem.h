@@ -2,6 +2,7 @@
 #define TERRAINTEXTUREITEM_H
 
 #include <QPropertyAnimation>
+#include <QDebug>
 #include "textures/AbstractTextureItem.h"
 #include "reshelpers/rescontainer.h"
 
@@ -9,6 +10,7 @@ extern QMap<QString, SpritesPack*> Sprites;
 
 class TerrainTextureItem : public AbstractTextureItem
 {
+    Q_OBJECT
     QString _resourceName;
     QPropertyAnimation* animator;
     int DURATION;
@@ -23,6 +25,10 @@ public:
         if (sprites == NULL)
             throw "cannot eval current sprites";
     }
+    void setDuration(int x) {
+        Q_ASSERT(x>0);
+        DURATION = x;
+    }
 
     void mousePressEvent(QGraphicsSceneMouseEvent *) {
         qDebug() << "terrain clicked";
@@ -33,22 +39,32 @@ public:
         _curSprite = x;
         setPixmap(sprites->content[_curSprite]);
     }
-
-    void animate() {
-        animator = new QPropertyAnimation(this);
-        animator->setDuration(DURATION);
-        animator->setTargetObject((TerrainTextureItem*)this);
-        animator->setPropertyName("sprite");
-        animator->setStartValue(0);
-        animator->setEndValue(sprites->content.count()-1);
-        QObject::connect(animator,SIGNAL(finished()),
-                         (TerrainTextureItem*)this, SLOT(animateRestart()) );
-    }
 public slots:
     void animateRestart() {
         if (animator == NULL)
             return;
         animator->start();
+    }
+public:
+    void initAnimation() {
+        animator = new QPropertyAnimation(this);
+        animator->setDuration(DURATION);
+        animator->setTargetObject(this);
+        animator->setPropertyName("sprite");
+        animator->setStartValue(0);
+        animator->setEndValue(sprites->content.count()-1);
+        QObject::connect(animator,SIGNAL(finished()),
+                         this, SLOT(animateRestart()) );
+        animator->start();
+    }
+    void startAnimation() {
+        if (animator != NULL) {
+            animator->start();
+        } else {
+            qDebug() << "animator is not initialized. forcing.";
+            initAnimation();
+            startAnimation();
+        }
     }
 };
 

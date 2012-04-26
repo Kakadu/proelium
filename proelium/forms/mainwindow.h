@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QGraphicsScene>
-#include "action/UserActionHypervisor.h"
+#include "action/UserActionHyperVisor.h"
 
 namespace Ui {
     class MainWindow;

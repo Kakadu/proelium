@@ -14,7 +14,10 @@ namespace Game {
         Dir_E = 6,
         Dir_NW, Dir_N, Dir_NE
     };
-
+    enum Nations {
+        Russia = 0,
+        Barbarians = 100
+    };
 }
 
 

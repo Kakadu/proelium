@@ -29,12 +29,12 @@ private:
 public:
     int id;
     QString name;
-    int ownerId;
+    Game::Nations ownerId;
     int maxMovePoint() { return _maxMovePoints; }
     Game::Direction lastDir() { return _lastDir; }
     void setLastDir(Game::Direction d) { _lastDir = d; }
 
-    inline int allPath() { return _allPath; }
+    /*inline int allPath() { return _allPath; }
     inline int nonEvaledPath() { return _nonEvaledPath; }
     inline void incrPath(int x) {
         _allPath+=x; _nonEvaledPath+=x;
@@ -43,7 +43,7 @@ public:
         if (x>_nonEvaledPath)
             throw std::exception();
         _nonEvaledPath -=x;
-    }
+    }*/
 
     Unit& operator=(const Unit& u) {
         Unit* a = new Unit(u.name, u.id, u.ownerId);
@@ -52,7 +52,7 @@ public:
     bool alive (void) { return is_alive; }
     void setAlive(bool b) { is_alive = b; }
 
-	explicit Unit(QString _name, int _id, int _ownerId, int maxMP=1,
+	explicit Unit(QString _name, int _id, Game::Nations _ownerId, int maxMP=1,
 				  QObject* parent = NULL) : QObject(parent) {
 		name = _name;
 		id = _id;

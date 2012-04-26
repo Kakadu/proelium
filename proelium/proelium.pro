@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     reshelpers/rescontainer.cpp \
     reshelpers/container.cpp \
     stuff/abstractions.cpp \
-    forms/mainwindow.cpp
+    forms/mainwindow.cpp \
+    action/UserActionHyperVisor.cpp
 HEADERS += \
     framecollection.h \
     unit.h \
@@ -27,11 +28,11 @@ HEADERS += \
     textures/AbstractTextureItem.h \
     textures/UnitTextureItem.h \
     textures/TerrainTextureItem.h \
-    action/UserActionHypervisor.h \
     stuff/abstractions.h \
     stuff/consts.h \
     stuff/consts2.h \
-    forms/mainwindow.h
+    forms/mainwindow.h \
+    action/UserActionHyperVisor.h
 FORMS += \
     forms/mainwindow.ui
 

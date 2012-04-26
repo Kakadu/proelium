@@ -8,7 +8,7 @@
 #include "reshelpers/rescontainer.h"
 #include "textures/UnitTextureItem.h"
 #include "textures/TerrainTextureItem.h"
-#include "action/UserActionHypervisor.h"
+#include "action/UserActionHyperVisor.h"
 #include "stuff/abstractions.h"
 #include "mapdrawer.h"
 #include "GameMap.h"
@@ -185,7 +185,7 @@ void MapDrawer::paintField() {
 	for (int j=0; j<s; ++j) {
 		MapSquare* sq = _map->getSquare1(i,j);
 		if (sq!=NULL)
-		sq->setTerrainSprite(40);
+			sq->setTerrainSprite(40);
 	}
 	MapSquare* sq;
 

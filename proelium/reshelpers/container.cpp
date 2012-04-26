@@ -1,8 +1,7 @@
 #include "rescontainer.h"
-#include "action/UserActionHypervisor.h"
+#include "action/UserActionHyperVisor.h"
 
 QMap<QString, SpritesPack*> Sprites;
 UserActionHyperVisor* MainHyperVisor;
 
-int* aaa;
 QVector<QString> dirHelper;

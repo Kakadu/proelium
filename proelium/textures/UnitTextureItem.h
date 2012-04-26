@@ -5,7 +5,7 @@
 #include <qgraphicsscene.h>
 #include <QGraphicsSceneMouseEvent>
 #include "textures/AbstractTextureItem.h"
-#include "action/UserActionHypervisor.h"
+#include "action/UserActionHyperVisor.h"
 
 extern  UserActionHyperVisor* MainHyperVisor;
 

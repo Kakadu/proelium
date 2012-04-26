@@ -7,7 +7,7 @@
 #include "unit.h"
 #include "GameMap.h"
 #include "mapdrawer.h"
-#include "action/UserActionHypervisor.h"
+#include "action/UserActionHyperVisor.h"
 
 extern QMap<QString, SpritesPack*> Sprites;
 extern UserActionHyperVisor* MainHyperVisor;
@@ -37,13 +37,13 @@ int main(int argc, char *argv[])
 
     GameMap map(4,4);
     map.init();
-    map.getSquare1(5,5)->addUnit(new Unit("Samurai",11, 1));
-/*
-    map.getSquare1(3,3)->addUnit(new Unit("AfricanChampion",43,2));
-    map.getSquare1(3,7)->addUnit(new Unit("AfricanChampion",44,2));
-    map.getSquare1(7,3)->addUnit(new Unit("AfricanChampion",45,2));
-    map.getSquare1(7,7)->addUnit(new Unit("AfricanChampion",46,2));
-*/
+    map.getSquare1(5,5)->addUnit(new Unit("Samurai",11, Game::Russia));
+
+    map.getSquare1(3,3)->addUnit(new Unit("AfricanChampion",43,Game::Barbarians) );
+    map.getSquare1(3,7)->addUnit(new Unit("AfricanChampion",44,Game::Barbarians) );
+    map.getSquare1(7,3)->addUnit(new Unit("AfricanChampion",45,Game::Barbarians) );
+    map.getSquare1(7,7)->addUnit(new Unit("AfricanChampion",46,Game::Barbarians) );
+
     MapDrawer drawer(scene, &map);
     drawer.paintField();
     drawer.repaint();
